@@ -469,5 +469,23 @@ $('#demo').addEventListener('click',()=>{
 // default to Page 1
 setStep(1);
 </script>
+<script>(function(){
+  function showBootMsg(msg){ var box=document.getElementById('bootMsg'); if(box) box.textContent=msg; }
+  window.addEventListener('error', function(e){ showBootMsg('⚠️ 腳本錯誤：'+(e && e.message ? e.message : '未知錯誤')); });
+  function safeBind(){
+    var next=document.getElementById('next1');
+    if(next && !next.dataset.bound){
+      next.dataset.bound='1';
+      next.addEventListener('click', function(){
+        var t=document.getElementById('inputText');
+        if(!t || !t.value.trim()){ alert('請先貼上資料'); return; }
+        setStep(2);
+        var p2=document.getElementById('inputTextPage2'); if(p2) p2.value='';
+      });
+    }
+  }
+  document.addEventListener('DOMContentLoaded', safeBind);
+  setTimeout(safeBind, 0);
+})();</script>
 </body>
 </html>
