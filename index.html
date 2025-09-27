@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Success Daily Reviewer</title>
   <style>
-    :root{
-      --bg:#0b1020; --panel:#121a33; --ink:#e9eefc; --muted:#9fb2ff; --accent:#7aa2ff; --accent2:#25d0a6;
-      --warn:#ffb02e; --danger:#ff5a78; --ok:#21d19f;
-    }
+    :root{ --bg:#0b1020; --panel:#121a33; --ink:#e9eefc; --muted:#9fb2ff; --accent:#7aa2ff; --accent2:#25d0a6; --warn:#ffb02e; --danger:#ff5a78; --ok:#21d19f; }
     html,body{height:100%;}
     body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,#0b1020 0%,#0e1430 100%); color:var(--ink);}
     .wrap{max-width:1100px;margin:0 auto;padding:28px;}
@@ -39,16 +36,17 @@
     .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
     .muted{color:#a9b8f7}
     .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);margin:14px 0}
+    .note{font-size:12px;color:#b7c6ff}
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Success Daily Reviewer</h1>
-    <div class="sub">三頁流程｜Page 1 輸入 → Page 2 運動紀錄確認 → Page 3 統計與睡眠指數</div>
+    <div class="sub">三頁流程｜Page 1 輸入 → Page 2 運動紀錄確認（可覆寫/補充資料）→ Page 3 統計與睡眠指數</div>
 
     <div class="steps">
       <div class="step" id="badge1">1. 輸入資料</div>
-      <div class="step" id="badge2">2. 有無運動紀錄？</div>
+      <div class="step" id="badge2">2. 有無運動紀錄？（可補充輸入）</div>
       <div class="step" id="badge3">3. 統計與輸出</div>
     </div>
 
@@ -57,12 +55,12 @@
       <div class="row">
         <div>
           <h3>Page 1 — 貼上你的每日紀錄</h3>
-          <p class="muted">建議格式：每行一條紀錄，日期置前，例如 <code>2025-09-26｜#pomodoro #finance｜…</code>；也支援 <code>[YYYY-MM-DD]</code> 標頭區段。</p>
+          <p class="muted">建議格式：每行一條紀錄，日期置前，例如 <code>2025-09-26｜#pomodoro #finance｜…</code>；也支援 <code>[YYYY-MM-DD]</code> 區段。</p>
         </div>
         <textarea id="inputText" placeholder="在此貼上你的紀錄文本…"></textarea>
         <div class="grid-auto">
           <div class="pill">時區：Asia/Tokyo</div>
-          <div class="pill">日期解析：僅 <kbd>YYYY-MM-DD</kbd> / <kbd>[YYYY-MM-DD]</kbd></div>
+          <div class="pill">日期解析：<kbd>YYYY-MM-DD</kbd> / <kbd>[YYYY-MM-DD]</kbd></div>
           <div class="pill">睡眠視窗：18:00–05:59</div>
         </div>
         <div class="btns">
@@ -75,9 +73,11 @@
 
     <!-- Page 2 -->
     <section class="card pad hidden" id="page2">
-      <h3>Page 2 — 是否包含運動紀錄？</h3>
-      <p class="muted">規則：同一 <code>[YYYY-MM-DD]</code> 區段內若含 2 個以上不同部位（如 Chest 與 Swim），則當天計 <strong>2 次運動</strong>；否則 <strong>1 次</strong>。最近七天（含基準日）每次 10 分、上限 100 分，作為「健康指數」。</p>
-      <div class="btns">
+      <h3>Page 2 — 是否包含運動紀錄？（可在此補充/修正輸入）</h3>
+      <p class="muted">規則：同一 <code>[YYYY-MM-DD]</code> 區段內若含 <u>2 個以上不同部位</u>（如 Chest 與 Swim），則當天計 <strong>2 次運動</strong>；否則 <strong>1 次</strong>。最近七天（含基準日）每次 10 分、上限 100 分，作為「健康指數」。</p>
+      <textarea id="inputTextPage2" placeholder="（可選）在此補充/覆寫 Page 1 的輸入；若留空將沿用 Page 1 文字。"></textarea>
+      <div class="note">提示：按下「有，繼續」或「沒有也要統計」時，若本欄有內容，系統將以本欄內容覆寫 Page 1 的資料。</div>
+      <div class="btns" style="margin-top:10px">
         <button id="confirmHasWorkout">有，繼續 →</button>
         <button class="secondary" id="confirmNoWorkout">沒有也要統計（視為 0 次） →</button>
         <button class="ghost" id="back1">← 返回上一步</button>
@@ -100,7 +100,7 @@
         </div>
         <div>
           <h3>睡眠指數（強化版）</h3>
-          <div class="muted" style="margin-bottom:8px">以輸入文本的最大日期為 Dmax，分析區間為 <code>Dmax-6 … Dmax</code>。解析：上床時間、睡眠時數、精神指數。</div>
+          <div class="muted" style="margin-bottom:8px">以輸入文本的最大日期為 Dmax，分析區間為 <code>Dmax-6 … Dmax</code>。解析：上床時間、睡眠時數、精神指數。支援 <code>sleep=</code>、<code>onBed=</code>、<code>energy=</code> 格式。</div>
           <div id="sleepSummary" class="pad" style="background:#0d1636;border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
           <div class="hr"></div>
           <h4>🧪 睡眠自我驗證</h4>
@@ -115,9 +115,7 @@
   </div>
 
 <script>
-/*****************
- * Helpers
- *****************/
+/* ===== Helpers ===== */
 const $ = (q)=>document.querySelector(q);
 function setStep(n){
   [1,2,3].forEach(i=>$('#badge'+i).classList.toggle('active', i===n));
@@ -127,36 +125,24 @@ function setStep(n){
   });
 }
 function toHalfWidth(str){
-  return str.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-            .replace(/　/g, ' ');
+  return str.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ');
 }
 function normalizeText(s){
   return toHalfWidth(s).replace(/[|:\uFF5C\uFF1A]/g,'｜').toLowerCase();
 }
-function uniq(arr){
-  return Array.from(new Set(arr));
-}
-function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+function uniq(arr){ return Array.from(new Set(arr)); }
 function pad2(n){return (n<10?'0':'')+n;}
-
-/*****************
- * Parsing Dates
- *****************/
 const DATE_RE = /\b(\d{4})-(\d{2})-(\d{2})\b/;
 const DATE_BRACKET_RE = /\[(\d{4})-(\d{2})-(\d{2})\]/;
 function parseYMD(s){
   const m = s.match(DATE_RE); if(!m) return null; const y=+m[1],mo=+m[2]-1,d=+m[3];
-  const dt = new Date(y,mo,d); // local Asia/Tokyo assumed by user; using local
+  const dt = new Date(y,mo,d);
   if(dt.getFullYear()!==y||dt.getMonth()!==mo||dt.getDate()!==d) return null;
   return dt;
 }
 function ymd(dt){return dt.getFullYear()+"-"+pad2(dt.getMonth()+1)+"-"+pad2(dt.getDate());}
 function addDays(dt,delta){const t=new Date(dt); t.setDate(t.getDate()+delta); return t;}
-
-/*****************
- * Input State & Fingerprint
- *****************/
-let lastFingerprint = null; // {L,C,H, tableHash, sleepHash}
+let lastFingerprint = null;
 function makeFingerprint(text){
   const L = text.split(/\n/).length;
   const C = [...text].length;
@@ -164,44 +150,47 @@ function makeFingerprint(text){
   const H = sum % 10000;
   return {L,C,H};
 }
-function hashString(s){
-  let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; }
-  return (h>>>0).toString(16);
+function hashString(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; } return (h>>>0).toString(16); }
+
+/* ===== Sections ===== */
+function buildSections(raw){
+  const lines = normalizeText(raw).split(/\n/);
+  const sections = []; // [{date:'yyyy-mm-dd', lines:[...]}]
+  let current = null;
+  for(const rawLine of lines){
+    const line = rawLine.trim(); if(!line) continue;
+    const bh = line.match(DATE_BRACKET_RE);
+    if(bh){ current = {date:`${bh[1]}-${bh[2]}-${bh[3]}`, lines:[]}; sections.push(current); continue; }
+    const hd = line.match(/^\b(\d{4})-(\d{2})-(\d{2})\b/);
+    if(hd){ current = {date:`${hd[1]}-${hd[2]}-${hd[3]}`, lines:[line]}; sections.push(current); continue; }
+    if(!current){ continue; }
+    current.lines.push(line);
+  }
+  return sections;
 }
 
-/*****************
- * Exercise Counter & Category Scoring
- *****************/
-// Detect [YYYY-MM-DD] sections and within each, count distinct body parts (e.g., Chest, Back, Swim)
+/* ===== Health Index & Categories ===== */
 function computeHealthIndex(text){
-  const lines = normalizeText(text).split(/\n/);
-  // Build day sections: either explicit [YYYY-MM-DD] headers, or per line-leading date
-  const dayMap = new Map(); // dateStr => {parts: Set<string>}
-  let currentDay = null;
-  for(let raw of lines){
-    const line = raw.trim(); if(!line) continue;
-    const bracket = line.match(/\[(\d{4})-(\d{2})-(\d{2})\]/);
-    if(bracket){ currentDay = `${bracket[1]}-${bracket[2]}-${bracket[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); continue; }
-    const headDate = line.match(/^\b(\d{4})-(\d{2})-(\d{2})\b/);
-    if(headDate){ currentDay = `${headDate[1]}-${headDate[2]}-${headDate[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
-    if(!currentDay) continue;
-    // naive body part keywords (customize as needed)
-    const parts = [
-      'chest','back','shoulder','leg','legs','arm','biceps','triceps','swim','run','cardio','yoga','bike','cycling','row','core','abs','squat','deadlift','bench','press','climb','boulder','hike','walk'
-    ];
-    for(const p of parts){ if(line.includes(p)) dayMap.get(currentDay).parts.add(p); }
-  }
-  // Determine Dmax
-  let dmax = null; for(const d of dayMap.keys()){ const dt=parseYMD(d); if(dt && (!dmax || dt>dmax)) dmax=dt; }
-  if(!dmax){ // fallback: scan any dates in text
-    const dates = lines.map(l=>{ const m=l.match(DATE_RE); return m? new Date(+m[1],+m[2]-1,+m[3]) : null; }).filter(Boolean);
-    if(dates.length) dmax = dates.sort((a,b)=>b-a)[0];
-  }
-  if(!dmax) return {score:0,count:0,window:[],dmax:null, detail:[]};
+  const sections = buildSections(text);
+  if(!sections.length) return {score:0,count:0,window:[],dmax:null, detail:[]};
+  // Dmax & 7-day window
+  let dmax = null; for(const s of sections){ const dt=parseYMD(s.date); if(dt && (!dmax || dt>dmax)) dmax=dt; }
   const window = []; for(let i=6;i>=0;i--) window.push(ymd(addDays(dmax,-i)));
+  // parts per date
+  const partKeywords = ['chest','back','shoulder','leg','legs','arm','biceps','triceps','swim','run','cardio','yoga','bike','cycling','row','core','abs','squat','deadlift','bench','press','climb','boulder','hike','walk'];
+  const dayMap = new Map();
+  for(const s of sections){
+    if(!window.includes(s.date)) continue;
+    const set = dayMap.get(s.date) || new Set();
+    for(const line of s.lines){ for(const p of partKeywords){ if(line.includes(p)) set.add(p); } }
+    dayMap.set(s.date,set);
+  }
   let count=0; const detail=[];
-  for(const d of window){ const rec = dayMap.get(d); if(!rec){ detail.push({date:d,parts:[],times:0}); continue; }
-    const n = rec.parts.size; const times = n>=2?2:(n>=1?1:0); count += times; detail.push({date:d,parts:[...rec.parts],times}); }
+  for(const d of window){
+    const set = dayMap.get(d) || new Set();
+    const times = set.size>=2?2:(set.size>=1?1:0);
+    count+=times; detail.push({date:d,parts:[...set],times});
+  }
   const score = Math.min(100, count*10);
   return {score,count,window,dmax,detail};
 }
@@ -218,63 +207,64 @@ const CATEGORY_DEFS = [
 function computeCategories(text, healthScore){
   const lines = normalizeText(text).split(/\n/).map(s=>s.trim()).filter(Boolean);
   const counts = new Map(CATEGORY_DEFS.map(c=>[c.key,0]));
-  for(const line of uniq(lines)){ // 去重：完全相同行只計一次
+  for(const line of uniq(lines)){
     for(const c of CATEGORY_DEFS){ if(c.kind==='health') continue; if(c.re.test(line)) counts.set(c.key, counts.get(c.key)+1); }
   }
-  // cap 100 *per category*
-  const result = CATEGORY_DEFS.map(c=>{
+  return CATEGORY_DEFS.map(c=>{
     if(c.kind==='health') return {key:c.key, times:Math.round(healthScore/10), score:healthScore};
     const times = counts.get(c.key) || 0; return {key:c.key, times, score:Math.min(100, times*10)};
   });
-  return result;
 }
 
-/*****************
- * Sleep Parsing (強化版)
- *****************/
+/* ===== Sleep Parsing (強化版：key=value) ===== */
 const TIME24 = /\b(?:[01]?\d|2[0-3])[:：][0-5]\d\b/;
 const TIME12 = /\b(1[0-2]|0?[1-9])\s?(am|pm)\b/;
 const TIME_CN_DAWN = /凌晨\s*([0-5]?\d)(?:[:：]([0-5]\d))?/;
-const BED_KW = /(上床|就寢|入睡|睡覺開始|sleep\s*start)/i;
+const BED_KW = /(上床|就寢|入睡|睡覺開始|sleep\s*start|bedtime|onbed|sleep_start|sleepstart)/i;
+const BED_EQ = /(onbed|bedtime|sleep_start|sleepstart|上床|就寢|入睡)\s*[:=]\s*([^｜\s]+)/i; // e.g., onBed=11:59pm
 const DUR_FLOAT = /\b(\d+(?:\.\d+)?)\s*(h|小時)\b/i;
 const DUR_HM = /\b(\d+)\s*(?:h|小時)\s*(\d+)\s*(?:m|分)\b/i;
-const DUR_HHMM = /\b([0-1]?\d|2[0-3])[:：]([0-5]\d)\b/; // only if context says duration
+const DUR_HHMM = /\b([0-1]?\d|2[0-3])[:：]([0-5]\d)\b/; // when context says duration
+const DUR_EQ = /(sleep|slept|duration|睡了|睡眠時數)\s*[:=]\s*([^｜\s]+)/i; // e.g., sleep=9h
 const DUR_MIN = /\b(\d+)\s*(min|分鐘)\b/i;
-const ENERGY = /(精神(?:指數)?|energy)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(?:\/\s*10|\/10|分)?/i;
+const ENERGY = /(精神(?:指數)?|energy)\s*[:：=]?\s*(\d+(?:\.\d+)?)\s*(?:\/\s*10|\/10|分)?/i;
 
 function tryExtractBedTime(line){
+  let m = line.match(BED_EQ);
+  if(m){ return m[2]; }
   if(!BED_KW.test(line)) return null;
-  // precedence: 24h, 12h, 凌晨
-  let m = line.match(TIME24);
-  if(m){ return m[0]; }
-  m = line.match(TIME12);
-  if(m){ return `${m[1]}${m[2]}`; }
+  m = line.match(TIME24); if(m) return m[0];
+  m = line.match(TIME12); if(m) return `${m[1]}${m[2]}`;
   m = line.match(TIME_CN_DAWN);
-  if(m){ const hh = m[1].padStart(2,'0'); const mm = (m[2]||'00').padStart(2,'0'); return `${hh}:${mm}`; }
+  if(m){ const hh = (m[1]+'').padStart(2,'0'); const mm = (m[2]||'00').padStart(2,'0'); return `${hh}:${mm}`; }
   return null;
 }
 function parseBedToMinutes(s){
-  // returns minutes in [18:00..29:59] by shifting <12:00 as +24h then mod 24
   let minutes=null;
   if(/am|pm/.test(s)){
-    const mt = s.match(/(\d{1,2})(am|pm)/); if(mt){ let h=+mt[1]%12; if(mt[2]==='pm') h+=12; minutes=h*60; }
+    const mt = s.match(/(\d{1,2})(?::(\d{2}))?(am|pm)/);
+    if(mt){ let h=(+mt[1])%12; if(mt[3]==='pm') h+=12; const mm = mt[2]? +mt[2] : 0; minutes=h*60+mm; }
   }else{
     const mt = s.match(/(\d{1,2}):(\d{2})/); if(mt){ minutes= (+mt[1])*60 + (+mt[2]); }
   }
   if(minutes==null) return null;
-  if(minutes<720) minutes += 1440; // <12:00 → +24h
-  // validity window 18:00–05:59 → [1080 .. 1799] in shifted space
-  const ok = (minutes>=1080 && minutes<= (5*60+59)+1440);
+  if(minutes<720) minutes += 1440; // <12:00 視為 +24h
+  const ok = (minutes>=1080 && minutes<= (5*60+59)+1440); // 18:00–05:59
   return ok ? minutes%1440 : null;
 }
+function parseDurationToken(tok){
+  let m = tok.match(DUR_HM); if(m) return (+m[1]) + (+m[2])/60;
+  m = tok.match(DUR_FLOAT); if(m) return +m[1];
+  m = tok.match(DUR_HHMM); if(m) return (+m[1]) + (+m[2])/60;
+  m = tok.match(DUR_MIN); if(m) return (+m[1])/60;
+  return null;
+}
 function tryExtractDurationHours(line){
-  let m = line.match(DUR_HM); if(m){ return (+m[1]) + (+m[2])/60; }
-  m = line.match(DUR_FLOAT); if(m){ return +m[1]; }
-  // context hint "睡了" or "duration"
-  if(/睡了|duration/i.test(line)){
-    m = line.match(DUR_HHMM); if(m){ return (+m[1]) + (+m[2])/60; }
-  }
-  m = line.match(DUR_MIN); if(m){ return (+m[1])/60; }
+  let m = line.match(DUR_EQ); if(m){ const v = parseDurationToken(m[2]); if(v!=null) return v; }
+  m = line.match(DUR_HM); if(m) return (+m[1]) + (+m[2])/60;
+  m = line.match(DUR_FLOAT); if(m) return +m[1];
+  if(/睡了|duration/i.test(line)){ m = line.match(DUR_HHMM); if(m) return (+m[1]) + (+m[2])/60; }
+  m = line.match(DUR_MIN); if(m) return (+m[1])/60;
   return null;
 }
 function tryExtractEnergy(line){
@@ -282,58 +272,65 @@ function tryExtractEnergy(line){
 }
 
 function computeSleep(text){
-  const raw = normalizeText(text);
-  const lines = raw.split(/\n/).map(s=>s.trim());
-  // Determine Dmax by dates in text
-  const dates=[]; for(const ln of lines){ const m=ln.match(DATE_RE)||ln.match(DATE_BRACKET_RE); if(m){ const y=+m[1],mo=+m[2]-1,d=+m[3]; dates.push(new Date(y,mo,d)); } }
-  if(!dates.length){ return {summary:"（找不到日期，無法計算睡眠區間）", audit:"", hash:""}; }
-  dates.sort((a,b)=>b-a); const Dmax = dates[0];
-  const windowSet = new Set(); for(let i=6;i>=0;i--) windowSet.add( ymd(addDays(Dmax,-i)) );
+  const sections = buildSections(text);
+  if(!sections.length){ return {summary:"（找不到日期，無法計算睡眠區間）", audit:"", hash:""}; }
+  // Dmax & window
+  let dmax = null; for(const s of sections){ const dt=parseYMD(s.date); if(dt && (!dmax || dt>dmax)) dmax=dt; }
+  const winSet = new Set(); for(let i=6;i>=0;i--) winSet.add( ymd(addDays(dmax,-i)) );
 
   const rows=[]; const excluded=[];
-  for(const ln of uniq(lines)){
-    const m = ln.match(DATE_RE) || ln.match(DATE_BRACKET_RE); if(!m) continue; const dstr = `${m[1]}-${m[2]}-${m[3]}`;
-    if(!windowSet.has(dstr)) continue;
+  for(const s of sections){
+    if(!winSet.has(s.date)) continue;
+    for(const ln of uniq(s.lines)){
+      const bedStr = tryExtractBedTime(ln);
+      const dur = tryExtractDurationHours(ln);
+      const eng = tryExtractEnergy(ln);
+      let bedMin = null; if(bedStr) bedMin = parseBedToMinutes(bedStr);
+      const rec = {date:s.date, src:ln.slice(0,100), bed:bedMin, bedRaw:bedStr, dur:dur, eng:eng};
 
-    // one-pass extract per line
-    const bedStr = tryExtractBedTime(ln);
-    const dur = tryExtractDurationHours(ln);
-    const eng = tryExtractEnergy(ln);
+      let ok=true; const reasons=[];
+      if(bedStr && bedMin==null){ ok=false; reasons.push('上床時間超出 18:00–05:59 規則'); }
+      if(dur!=null && (dur<2 || dur>14)){ ok=false; reasons.push('睡眠時數超界 (2–14h)'); }
+      if(eng!=null && (eng<0 || eng>10)){ ok=false; reasons.push('精神指數超界 (0–10)'); }
 
-    let bedMin = null; if(bedStr) bedMin = parseBedToMinutes(bedStr);
-
-    const rec = {date:dstr, src:ln.slice(0,90), bed:bedMin, bedRaw:bedStr, dur:dur, eng:eng};
-
-    // apply bounds
-    let ok=true; let reasons=[];
-    if(bedStr && bedMin==null){ ok=false; reasons.push('上床時間超出 18:00–05:59 規則'); }
-    if(dur!=null && (dur<2 || dur>14)){ ok=false; reasons.push('睡眠時數超界 (2–14h)'); }
-    if(eng!=null && (eng<0 || eng>10)){ ok=false; reasons.push('精神指數超界 (0–10)'); }
-
-    if(ok) rows.push(rec); else excluded.push({date:dstr, src:rec.src, reason:reasons.join('、')});
+      if(ok && (bedStr || dur!=null || eng!=null)) rows.push(rec);
+      else if(!ok) excluded.push({date:s.date, src:rec.src, reason:reasons.join('、')});
+    }
   }
 
-  // Averages
   const beds = rows.filter(r=>r.bed!=null).map(r=>r.bed);
   const durs = rows.filter(r=>r.dur!=null).map(r=>r.dur);
   const engs = rows.filter(r=>r.eng!=null).map(r=>r.eng);
-  function avg(a){ if(!a.length) return null; return a.reduce((x,y)=>x+y,0)/a.length; }
-  const avgBed = avg(beds);
-  const avgDur = avg(durs);
-  const avgEng = avg(engs);
+  const avg = a => a.length? a.reduce((x,y)=>x+y,0)/a.length : null;
+  const avgBed = avg(beds), avgDur = avg(durs), avgEng = avg(engs);
 
-  function bedTo12(m){ if(m==null) return '—'; let h=Math.floor(m/60), mm=m%60; const ap = h>=12? 'pm':'am'; h = h%12; if(h===0) h=12; return `${h}:${pad2(mm)}${ap}`; }
+  const bedTo12 = m => {
+    if(m==null) return '—';
+    let h=Math.floor(m/60), mm=m%60; const ap = h>=12? 'pm':'am'; h = h%12; if(h===0) h=12;
+    return `${h}:${pad2(mm)}${ap}`;
+  };
+
+  const formula = [
+    '【計算公式】',
+    '• 平均上床時間：將上床時間映射至 18:00–05:59 視窗（<12:00 加 24h），取平均後再轉回 12h 樣式。',
+    '• 平均睡眠時數：有效樣本（2–14h）之算術平均，四捨五入至小數第 2 位。',
+    '• 平均精神指數：有效樣本（0–10）之算術平均，四捨五入至小數第 2 位。'
+  ].join('\n');
 
   const summary = [
     '🧾 結論整理',
     `🛏️ 平均上床時間：${bedTo12(avgBed)}`,
     `😴 平均睡眠時數：${avgDur!=null?avgDur.toFixed(2):'—'} 小時`,
-    `⚡ 平均精神指數：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`
+    `⚡ 平均精神指數：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`,
+    '',
+    formula
   ].join('\n');
 
-  // Audit block
   const linesAudit = rows.map(r=>`- ${r.date}｜…${r.src}…｜上床 ${r.bedRaw?bedTo12(r.bed):'—'}｜時數 ${r.dur!=null?r.dur.toFixed(2)+'h':'—'}｜精神 ${r.eng!=null?(r.eng%1? r.eng.toFixed(2):r.eng)+'/10':'—'}`);
-  const stat = `\n\n✅ 統計：上床 ${beds.length} 筆｜時數 ${durs.length} 筆｜精神 ${engs.length} 筆\n→ 平均上床：${bedTo12(avgBed)}\n→ 平均時數：${avgDur!=null?avgDur.toFixed(2):'—'} h\n→ 平均精神：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`;
+  const stat = `\n\n✅ 統計：上床 ${beds.length} 筆｜時數 ${durs.length} 筆｜精神 ${engs.length} 筆`+
+               `\n→ 平均上床：${bedTo12(avgBed)}`+
+               `\n→ 平均時數：${avgDur!=null?avgDur.toFixed(2):'—'} h`+
+               `\n→ 平均精神：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`;
   const excl = excluded.length? ('\n\n🚫 排除清單：\n' + excluded.map(e=>`- ${e.date}｜…${e.src}…｜${e.reason}`).join('\n')) : '';
 
   const hash = hashString(summary+"|"+linesAudit.join('\n')+stat+excl);
@@ -342,20 +339,13 @@ function computeSleep(text){
   return {summary, audit, hash};
 }
 
-/*****************
- * Rendering
- *****************/
+/* ===== Rendering ===== */
 function renderFixedTable(rows){
-  // rows: [{key, times, score}]
   const map = new Map(rows.map(r=>[r.key,r]));
-  function rowHTML(k){ const r = map.get(k) || {times:0,score:0};
-    return `<tr><td>${k}</td><td>${r.times} 次</td><td>${r.score} 分</td></tr>`;
-  }
-  const html = `
+  const rowHTML = k => { const r = map.get(k) || {times:0,score:0}; return `<tr><td>${k}</td><td>${r.times} 次</td><td>${r.score} 分</td></tr>`; };
+  return `
   <table>
-    <thead>
-      <tr><th>類別</th><th>出現次數</th><th>總分</th></tr>
-    </thead>
+    <thead><tr><th>類別</th><th>出現次數</th><th>總分</th></tr></thead>
     <tbody>
       ${rowHTML('健康指數')}
       ${rowHTML('學習財經')}
@@ -365,26 +355,26 @@ function renderFixedTable(rows){
       ${rowHTML('關係經營')}
     </tbody>
   </table>`;
-  return html;
 }
 
 function doAll(){
   const raw = $('#inputText').value||'';
-  const norm = normalizeText(raw);
 
-  // Health index (7-day window)
+  // 健康指數
   const health = computeHealthIndex(raw);
   const categories = computeCategories(raw, health.score);
-
   const tableHTML = renderFixedTable(categories);
-  $('#scoreTableWrap').innerHTML = tableHTML + `<div style="margin-top:8px" class="muted">健康指數：最近七天（${health.window.join('、')}）共 <b>${health.count}</b> 次運動 → ${health.score} 分。` + (health.dmax?`（Dmax=${ymd(health.dmax)}）`:'') + `</div>`;
+  document.getElementById('scoreTableWrap').innerHTML = tableHTML +
+    `<div style="margin-top:8px" class="muted">健康指數：最近七天（${health.window.join('、')}）共 <b>${health.count}</b> 次運動 → ${health.score} 分。` +
+    (health.dmax?`（Dmax=${ymd(health.dmax)}）`:'') + `</div>`;
 
-  // Sleep module
+  // 睡眠
   const sleep = computeSleep(raw);
-  $('#sleepSummary').textContent = sleep.summary;
-  $('#sleepAudit').textContent = sleep.audit + `\n\n🔒 Fingerprint | L=${makeFingerprint(raw).L}, C=${makeFingerprint(raw).C}, H=${makeFingerprint(raw).H}`;
+  document.getElementById('sleepSummary').textContent = sleep.summary;
+  document.getElementById('sleepAudit').textContent = sleep.audit +
+    `\n\n🔒 Fingerprint | L=${makeFingerprint(raw).L}, C=${makeFingerprint(raw).C}, H=${makeFingerprint(raw).H}`;
 
-  // Warning on inconsistent results with identical input
+  // 一致性警告
   const fp = makeFingerprint(raw);
   const cur = {L:fp.L,C:fp.C,H:fp.H, tableHash:hashString(tableHTML), sleepHash:sleep.hash};
   let alertMsg = '';
@@ -394,64 +384,68 @@ function doAll(){
     }
   }
   lastFingerprint = cur;
-  $('#alertBox').textContent = alertMsg;
+  document.getElementById('alertBox').textContent = alertMsg;
 }
 
-/*****************
- * Events
- *****************/
-$('#next1').addEventListener('click',()=>{ if(!$('#inputText').value.trim()){ alert('請先貼上資料'); return; } setStep(2); });
-$('#back1').addEventListener('click',()=>setStep(1));
-$('#confirmHasWorkout').addEventListener('click',()=>{ setStep(3); doAll(); });
-$('#confirmNoWorkout').addEventListener('click',()=>{ setStep(3); doAll(); });
-$('#recalc').addEventListener('click',()=>doAll());
-$('#back2').addEventListener('click',()=>setStep(2));
-$('#copyTable').addEventListener('click',()=>{
-  const node = $('#scoreTableWrap');
-  const txt = node.innerText.replace(/\n{2,}/g,'\n');
-  navigator.clipboard.writeText(txt).then(()=>{
-    alert('已複製評分表至剪貼簿');
-  });
+/* ===== Events ===== */
+document.getElementById('next1').addEventListener('click',()=>{
+  if(!document.getElementById('inputText').value.trim()){ alert('請先貼上資料'); return; }
+  setStep(2); document.getElementById('inputTextPage2').value='';
 });
-$('#copySleep').addEventListener('click',()=>{
-  const block = '🧾 結論整理\n' + $('#sleepSummary').innerText + '\n\n🧪 睡眠自我驗證\n' + $('#sleepAudit').innerText;
+document.getElementById('back1').addEventListener('click',()=>setStep(1));
+
+function applyPage2IfAny(){
+  const v = document.getElementById('inputTextPage2').value.trim();
+  if(v){ document.getElementById('inputText').value = v; }
+}
+document.getElementById('confirmHasWorkout').addEventListener('click',()=>{ applyPage2IfAny(); setStep(3); doAll(); });
+document.getElementById('confirmNoWorkout').addEventListener('click',()=>{ applyPage2IfAny(); setStep(3); doAll(); });
+
+document.getElementById('recalc').addEventListener('click',()=>doAll());
+document.getElementById('back2').addEventListener('click',()=>setStep(2));
+document.getElementById('copyTable').addEventListener('click',()=>{
+  const node = document.getElementById('scoreTableWrap');
+  const txt = node.innerText.replace(/\n{2,}/g,'\n');
+  navigator.clipboard.writeText(txt).then(()=>{ alert('已複製評分表至剪貼簿'); });
+});
+document.getElementById('copySleep').addEventListener('click',()=>{
+  const block = '🧾 結論整理\n' + document.getElementById('sleepSummary').innerText +
+                '\n\n🧪 睡眠自我驗證\n' + document.getElementById('sleepAudit').innerText;
   navigator.clipboard.writeText(block).then(()=>alert('已複製睡眠區塊'));
 });
-$('#clear').addEventListener('click',()=>{ $('#inputText').value=''; lastFingerprint=null; });
+document.getElementById('clear').addEventListener('click',()=>{ document.getElementById('inputText').value=''; lastFingerprint=null; });
 
-$('#demo').addEventListener('click',()=>{
+document.getElementById('demo').addEventListener('click',()=>{
   const demo = `
-[2025-09-20]
-2025-09-20｜#pomodoro #finance｜閱讀《漫步華爾街》30m
-2025-09-20｜chest smith press 90kg x 10｜sleep start 23:40｜睡了 6h｜精神 6/10
-
-[2025-09-21]
-2025-09-21｜#pomodoro #english｜shadowing 20m
-2025-09-21｜swim 1km｜duration 01:10｜energy 7/10｜上床 12:10am
-
-[2025-09-22]
-2025-09-22｜#pomodoro #review｜整理成功日記 25m｜入睡 0:15｜睡眠時數 6.5h｜精神指數 5/10
-
-[2025-09-23]
-2025-09-23｜#mentalhealth #selfcontrol｜冥想 10m
-2025-09-23｜run 5k｜上床 凌晨 0:30｜睡了 6h 30m｜energy 6/10
-
-[2025-09-24]
-2025-09-24｜#relationship #happywifehappylife｜晚餐約會
-2025-09-24｜back row machine｜sleep start 23:55｜睡眠時數 7.2 小時｜精神 7/10
+[2025-09-26]
+10:31am ｜ sleep=9h | onBed=11:59pm | energy=8/10 #health
 
 [2025-09-25]
 2025-09-25｜#pomodoro #finance｜畫 EV 決策樹 40m
-2025-09-25｜walk 7k steps
+walk 7k steps | onBed=0:05am | sleep=6h | energy=5/10
 
-[2025-09-26]
-2025-09-26｜#pomodoro #review｜反思整理 25m
-2025-09-26｜climb boulder v2｜上床 0:05｜睡了 6h｜精神 5/10
+[2025-09-24]
+#relationship #happywifehappylife｜晚餐約會
+back row machine｜sleep start 23:55｜睡眠時數 7.2 小時｜精神 7/10
+
+[2025-09-23]
+#mentalhealth #selfcontrol｜冥想 10m
+run 5k｜上床 凌晨 0:30｜睡了 6h 30m｜energy 6/10
+
+[2025-09-22]
+#pomodoro #review｜整理成功日記 25m｜入睡 0:15｜睡眠時數 6.5h｜精神指數 5/10
+
+[2025-09-21]
+#pomodoro #english｜shadowing 20m
+swim 1km｜duration 01:10｜energy 7/10｜上床 12:10am
+
+[2025-09-20]
+#pomodoro #finance｜閱讀《漫步華爾街》30m
+chest smith press 90kg x 10｜睡了 6h｜精神 6/10
 `;
-  $('#inputText').value = demo.trim();
+  document.getElementById('inputText').value = demo.trim();
 });
 
-// default to Page 1
 setStep(1);
 </script>
 </body>
