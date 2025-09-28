@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Success Daily Reviewer</title>
+  <title>Success Daily Reviewer — Sleep V2</title>
   <style>
-    :root{
-      --bg:#0b1020; --panel:#121a33; --ink:#e9eefc; --muted:#9fb2ff; --accent:#7aa2ff; --accent2:#25d0a6;
-      --warn:#ffb02e; --danger:#ff5a78; --ok:#21d19f;
-    }
-    html,body{height:100%;}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,#0b1020 0%,#0e1430 100%); color:var(--ink);}
-    .wrap{max-width:1100px;margin:0 auto;padding:28px;}
+    :root{ --bg:#0b1020; --panel:#121a33; --ink:#e9eefc; --muted:#9fb2ff; --accent:#7aa2ff; --accent2:#25d0a6; --warn:#ffb02e; --danger:#ff5a78; --ok:#21d19f; }
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,#0b1020 0%,#0e1430 100%);color:var(--ink)}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px}
     h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
     .sub{color:var(--muted);margin-bottom:18px}
-    .card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
     .row{display:grid;gap:16px}
     .pad{padding:18px}
-    textarea{width:100%;min-height:280px;border-radius:12px;background:#0c1431;color:var(--ink);border:1px solid rgba(255,255,255,.08);padding:12px 14px;font-size:14px;line-height:1.5;}
+    textarea{width:100%;min-height:280px;border-radius:12px;background:#0c1431;color:var(--ink);border:1px solid rgba(255,255,255,.08);padding:12px 14px;font-size:14px;line-height:1.5}
     input[type="text"],select{width:100%;border-radius:10px;background:#0c1431;color:var(--ink);border:1px solid rgba(255,255,255,.08);padding:10px 12px;font-size:14px}
     .btns{display:flex;flex-wrap:wrap;gap:10px}
     button{border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#0a0f1f;font-weight:700;cursor:pointer}
@@ -25,30 +22,27 @@
     button.ghost{background:transparent;border:1px dashed rgba(255,255,255,.25);color:var(--ink)}
     .hidden{display:none}
     .steps{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
-    .step{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:var(--muted);}
+    .step{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:var(--muted)}
     .step.active{background:var(--accent2);color:#07121c;border-color:transparent}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
     table{width:100%;border-collapse:collapse;background:#0d1636;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
     th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
     th{color:#bcd0ff;background:#101a3e}
     code,kbd{background:#0a1231;border:1px solid rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;color:#cde}
     .pill{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#0d1636}
-    .pill.ok{border-color:rgba(33,209,159,.4);}
-    .pill.warn{border-color:rgba(255,176,46,.45)}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
-    .muted{color:#a9b8f7}
+    .tiny{font-size:12px;color:#9fb2ff}
     .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);margin:14px 0}
+    pre.audit{white-space:pre-wrap;background:#0a1231;border:1px solid rgba(255,255,255,.08);padding:12px;border-radius:12px;max-height:320px;overflow:auto}
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Success Daily Reviewer</h1>
-    <div class="sub">三頁流程｜Page 1 輸入 → Page 2 運動紀錄確認 → Page 3 統計與睡眠指數</div>
+    <div class="sub">三頁流程｜Page 1 輸入 → Page 2 運動紀錄 → Page 3 統計與輸出（含 Sleep V2）</div>
 
     <div class="steps">
       <div class="step" id="badge1">1. 輸入資料</div>
-      <div class="step" id="badge2">2. 有無運動紀錄？</div>
+      <div class="step" id="badge2">2. 運動紀錄（僅此頁用於健康指數）</div>
       <div class="step" id="badge3">3. 統計與輸出</div>
     </div>
 
@@ -56,17 +50,16 @@
     <section class="card pad" id="page1">
       <div class="row">
         <div>
-          <h3>Page 1 — 貼上你的每日紀錄</h3>
-          <p class="muted">建議格式：每行一條紀錄，日期置前，例如 <code>2025-09-26｜#pomodoro #finance｜…</code>；也支援 <code>[YYYY-MM-DD]</code> 標頭區段。</p>
+          <h3>Page 1 — 貼上你的每日紀錄（供分類與 Sleep V2 使用）</h3>
+          <p class="muted">建議格式：每行一條紀錄，或以 <code>[YYYY-MM-DD ...]</code> 包裹。Sleep V2 的專用格式見 Page 3 說明。</p>
         </div>
         <textarea id="inputText" placeholder="在此貼上你的紀錄文本…"></textarea>
         <div class="grid-auto">
           <div class="pill">時區：Asia/Tokyo</div>
-          <div class="pill">日期解析：僅 <kbd>YYYY-MM-DD</kbd> / <kbd>[YYYY-MM-DD]</kbd></div>
-          <div class="pill">睡眠視窗：18:00–05:59</div>
+          <div class="pill">日期解析：<kbd>YYYY-MM-DD</kbd> / <kbd>[YYYY-MM-DD]</kbd></div>
         </div>
         <div class="btns">
-          <button id="next1">下一步：運動紀錄確認 →</button>
+          <button id="next1">下一步：運動紀錄 →</button>
           <button class="secondary" id="demo">載入範例資料</button>
           <button class="ghost" id="clear">清空</button>
         </div>
@@ -75,45 +68,52 @@
 
     <!-- Page 2 -->
     <section class="card pad hidden" id="page2">
-      <h3>Page 2 — 是否包含運動紀錄？（此頁輸入將「追加」到 Page 1，而非覆寫）</h3>
-      <p class="muted">規則：同一 <code>[YYYY-MM-DD]</code> 區段內若含 2 個以上不同部位（如 Chest 與 Swim），則當天計 <strong>2 次運動</strong>；否則 <strong>1 次</strong>。最近七天（含基準日）每次 10 分、上限 100 分，作為「健康指數」。</p>
-      <textarea id="inputTextPage2" placeholder="（可選）在此輸入要追加的內容，例如
-[2025-09-26]
-chest press 3x12｜walk 5k｜onBed=11:50pm｜sleep=6h"></textarea>
-      <div style="font-size:12px;color:#b7c6ff;">提示：本頁文字會在下一步時 <b>追加</b> 到 Page 1 的內容後面，不會覆寫原文。</div>
+      <h3>Page 2 — 運動紀錄（僅此頁用於「健康指數」計算）</h3>
+      <p class="muted">規則：同一 <code>[YYYY-MM-DD]</code> 區段（或同日行首日期）若含 2 個以上不同部位（如 Chest 與 Swim），則當天計 <strong>2 次運動</strong>；否則 <strong>1 次</strong>。最近七天（含基準日）每次 10 分、上限 100 分。支援 <code>[YYYY-MM-DD]</code>、<code>YYYY-MM-DD</code>（行首）與 <code>YYYY/M/D</code>（行首）。</p>
+      <textarea id="inputTextPage2" placeholder="（僅此處文字會用來算健康指數）例如：
+[2025-06-10] chest
+2025/6/10, Chest, Middle Chest, smith Machine, 80kg, 13 reps, 1 sets,
+2025/6/10, Swim, Pool, 100m"></textarea>
+      <div class="tiny">提示：Page 1 用於分類與 Sleep V2；健康指數只來自 Page 2。</div>
       <div class="btns" style="margin-top:10px">
-        <button id="confirmHasWorkout">有，繼續 →</button>
-        <button class="secondary" id="confirmNoWorkout">沒有也要統計（仍會追加本頁文字） →</button>
+        <button id="confirmHasWorkout">計算 →</button>
+        <button class="secondary" id="confirmNoWorkout">沒有紀錄也要統計（健康指數將為 0） →</button>
         <button class="ghost" id="back1">← 返回上一步</button>
       </div>
     </section>
 
     <!-- Page 3 -->
     <section class="card pad hidden" id="page3">
-      <div class="grid-2">
-        <div>
-          <h3>Page 3 — 六類評分表（固定格式）</h3>
-          <div id="scoreTableWrap"></div>
-          <div class="hr"></div>
-          <div class="btns">
-            <button id="copyTable">複製評分表</button>
-            <button class="secondary" id="recalc">重新計算</button>
-            <button class="ghost" id="back2">← 返回上一步</button>
-          </div>
-          <div id="alertBox" class="muted" style="margin-top:10px"></div>
+      <div>
+        <h3>Page 3 — 六類評分表（固定格式）</h3>
+        <div id="scoreTableWrap"></div>
+        <div class="hr"></div>
+        <div class="btns">
+          <button id="copyTable">複製評分表</button>
+          <button class="secondary" id="recalc">重新計算</button>
+          <button class="ghost" id="back2">← 返回上一步</button>
         </div>
-        <div>
-          <h3>睡眠指數（強化版）</h3>
-          <div class="muted" style="margin-bottom:8px">以輸入文本的最大日期為 Dmax，分析區間為 <code>Dmax-6 … Dmax</code>。解析：上床時間、睡眠時數、精神指數。</div>
-          <div id="sleepSummary" class="pad" style="background:#0d1636;border-radius:12px;border:1px solid rgba(255,255,255,.08)"></div>
-          <div class="hr"></div>
-          <h4>🧪 睡眠自我驗證</h4>
-          <pre id="sleepAudit" class="mono" style="white-space:pre-wrap;background:#0a1231;border:1px solid rgba(255,255,255,.08);padding:12px;border-radius:12px;max-height:360px;overflow:auto"></pre>
-          <div class="btns">
-            <button id="copySleep">複製睡眠區塊</button>
-          </div>
-        </div>
+        <div id="alertBox" class="muted" style="margin-top:10px"></div>
       </div>
+
+      <div class="hr"></div>
+      <h3>睡眠指數（簡化輸入 / Sleep V2）</h3>
+      <div class="tiny">輸入格式（僅統計最近 7 天，依 <code>Dmax-6 … Dmax</code> 視窗）：<br><code>[YYYY-MM-DD\nHH:MMam/pm ｜ sleep=9h | onBed=1:00am | energy=8/10 #health]</code></div>
+      <div id="sleepV2Summary" class="pad" style="background:#0d1636;border-radius:12px;border:1px solid rgba(255,255,255,.08);margin-top:8px"></div>
+      <pre id="sleepV2Audit" class="audit mono"></pre>
+      <div class="btns"><button id="copySleepV2">複製睡眠區塊</button></div>
+
+      <div class="hr"></div>
+      <h3>🧪 運動自我驗證</h3>
+      <div class="tiny">列出最近七天每一日偵測到的部位關鍵字與當日計次（1 或 2）。</div>
+      <pre id="exerciseAudit" class="audit mono"></pre>
+
+      <details class="test">
+        <summary>🧪 自動化測試（點我展開 / 收合）</summary>
+        <div class="muted" style="margin:8px 0">這些測試不會更改你的資料，僅用內建字串驗證計算邏輯。</div>
+        <div class="btns"><button id="runTests">Run Tests</button></div>
+        <pre id="testOut" class="mono" style="white-space:pre-wrap"></pre>
+      </details>
     </section>
 
   </div>
@@ -131,83 +131,75 @@ function setStep(n){
   });
 }
 function toHalfWidth(str){
-  return str.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
-            .replace(/　/g, ' ');
+  return str.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ');
 }
-function normalizeText(s){
-  return toHalfWidth(s).replace(/[|:\uFF5C\uFF1A]/g,'｜').toLowerCase();
-}
-function uniq(arr){
-  return Array.from(new Set(arr));
-}
-function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
-function pad2(n){return (n<10?'0':'')+n;}
+function normalizeText(s){ return toHalfWidth(s).replace(/[|:\uFF5C\uFF1A]/g,'｜').toLowerCase(); }
+function uniq(arr){ return Array.from(new Set(arr)); }
+function pad2(n){ return (n<10?'0':'')+n; }
 
 /*****************
  * Parsing Dates
  *****************/
 const DATE_RE = /\b(\d{4})-(\d{2})-(\d{2})\b/;
-const DATE_BRACKET_RE = /\[(\d{4})-(\d{2})-(\d{2})\]/;
-function parseYMD(s){
-  const m = s.match(DATE_RE); if(!m) return null; const y=+m[1],mo=+m[2]-1,d=+m[3];
-  const dt = new Date(y,mo,d); // local Asia/Tokyo assumed by user; using local
-  if(dt.getFullYear()!==y||dt.getMonth()!==mo||dt.getDate()!==d) return null;
-  return dt;
-}
-function ymd(dt){return dt.getFullYear()+"-"+pad2(dt.getMonth()+1)+"-"+pad2(dt.getDate());}
-function addDays(dt,delta){const t=new Date(dt); t.setDate(t.getDate()+delta); return t;}
+const DATE_SLASH_HEAD = /^\b(\d{4})\/(\d{1,2})\/(\d{1,2})\b/; // YYYY/M/D at line start
+function parseYMD(s){ const m = s.match(DATE_RE); if(!m) return null; const y=+m[1],mo=+m[2]-1,d=+m[3]; const dt = new Date(y,mo,d); if(dt.getFullYear()!==y||dt.getMonth()!==mo||dt.getDate()!==d) return null; return dt; }
+function ymd(dt){ return dt.getFullYear()+"-"+pad2(dt.getMonth()+1)+"-"+pad2(dt.getDate()); }
+function addDays(dt,delta){ const t=new Date(dt); t.setDate(t.getDate()+delta); return t; }
 
 /*****************
- * Input State & Fingerprint
+ * Fingerprint
  *****************/
-let lastFingerprint = null; // {L,C,H, tableHash, sleepHash}
-function makeFingerprint(text){
-  const L = text.split(/\n/).length;
-  const C = [...text].length;
-  let sum=0; for(const ch of text){ sum += ch.codePointAt(0)||0; }
-  const H = sum % 10000;
-  return {L,C,H};
-}
-function hashString(s){
-  let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; }
-  return (h>>>0).toString(16);
-}
+let lastFingerprint = null;
+function makeFingerprint(text){ const L = text.split(/\n/).length; const C = [...text].length; let sum=0; for(const ch of text){ sum += ch.codePointAt(0)||0; } const H = sum % 10000; return {L,C,H}; }
+function hashString(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; } return (h>>>0).toString(16); }
 
 /*****************
- * Exercise Counter & Category Scoring
+ * Exercise detection
  *****************/
-// Detect [YYYY-MM-DD] sections and within each, count distinct body parts (e.g., Chest, Back, Swim)
+const PART_PATTERNS = [
+  {key:'chest', re:/(\bchest\b|bench(\s|-)press|incline\s+bench|push[- ]?up|胸(?=\s|\p{P}|$)|胸推|臥推)/iu},
+  {key:'back', re:/(\bback\b|row(\s|-)machine|lat\s+pull(-| )?down|划船|引體向上|背(?=\s|\p{P}|$))/iu},
+  {key:'shoulder', re:/(shoulder|overhead\s+press|側平舉|肩|肩推)/iu},
+  {key:'legs', re:/(\bleg(s)?\b|squat|deadlift|lunge|腿|深蹲|硬舉|箭步)/iu},
+  {key:'arms', re:/(biceps?|triceps?|curl|臂|二頭|三頭)/iu},
+  {key:'core', re:/(core|abs|plank|仰臥起坐|核心)/iu},
+  {key:'swim', re:/(\bswim\b|游泳)/iu},
+  {key:'run', re:/(\brun(ning)?\b|\b5k\b|10k|半馬|全馬|跑步)/iu},
+  {key:'walk', re:/(\bwalk(ing)?\b|步行|健走|\d+\s?k\s?steps)/iu},
+  {key:'bike', re:/(bike|cycling|spinning|騎車|單車|飛輪)/iu},
+  {key:'yoga', re:/(yoga|瑜伽)/iu},
+  {key:'climb', re:/(climb|boulder|攀岩|抱石)/iu},
+  {key:'cardio', re:/(cardio|有氧)/iu},
+  {key:'row', re:/(row(ing)?\b|划船機)/iu}
+];
+function detectPartsInLine(line){ const found = new Set(); for(const {key,re} of PART_PATTERNS){ if(re.test(line)) found.add(key); } return found; }
+
 function computeHealthIndex(text){
   const lines = normalizeText(text).split(/\n/);
-  // Build day sections: either explicit [YYYY-MM-DD] headers, or per line-leading date
-  const dayMap = new Map(); // dateStr => {parts: Set<string>}
+  const dayMap = new Map();
   let currentDay = null;
-  for(let raw of lines){
+  for(const raw of lines){
     const line = raw.trim(); if(!line) continue;
-    const bracket = line.match(/\[(\d{4})-(\d{2})-(\d{2})\]/);
-    if(bracket){ currentDay = `${bracket[1]}-${bracket[2]}-${bracket[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); continue; }
-    const headDate = line.match(/^\b(\d{4})-(\d{2})-(\d{2})\b/);
-    if(headDate){ currentDay = `${headDate[1]}-${headDate[2]}-${headDate[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
+    const mBracket = line.match(/\[(\d{4})-(\d{2})-(\d{2})\]/);
+    if(mBracket){ currentDay = `${mBracket[1]}-${mBracket[2]}-${mBracket[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); continue; }
+    const mHeadDash = line.match(/^\b(\d{4})-(\d{2})-(\d{2})\b/);
+    const mHeadSlash = line.match(DATE_SLASH_HEAD);
+    if(mHeadDash){ currentDay = `${mHeadDash[1]}-${mHeadDash[2]}-${mHeadDash[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
+    else if(mHeadSlash){ currentDay = `${mHeadSlash[1]}-${pad2(+mHeadSlash[2])}-${pad2(+mHeadSlash[3])}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
     if(!currentDay) continue;
-    // naive body part keywords (customize as needed)
-    const parts = [
-      'chest','back','shoulder','leg','legs','arm','biceps','triceps','swim','run','cardio','yoga','bike','cycling','row','core','abs','squat','deadlift','bench','press','climb','boulder','hike','walk'
-    ];
-    for(const p of parts){ if(line.includes(p)) dayMap.get(currentDay).parts.add(p); }
+    const found = detectPartsInLine(line);
+    if(found.size){ const rec = dayMap.get(currentDay); for(const k of found) rec.parts.add(k); }
   }
-  // Determine Dmax
   let dmax = null; for(const d of dayMap.keys()){ const dt=parseYMD(d); if(dt && (!dmax || dt>dmax)) dmax=dt; }
-  if(!dmax){ // fallback: scan any dates in text
-    const dates = lines.map(l=>{ const m=l.match(DATE_RE); return m? new Date(+m[1],+m[2]-1,+m[3]) : null; }).filter(Boolean);
-    if(dates.length) dmax = dates.sort((a,b)=>b-a)[0];
-  }
-  if(!dmax) return {score:0,count:0,window:[],dmax:null, detail:[]};
+  if(!dmax){ const dates = lines.map(l=>{ const m=l.match(DATE_RE); return m? new Date(+m[1],+m[2]-1,+m[3]) : null; }).filter(Boolean); if(dates.length) dmax = dates.sort((a,b)=>b-a)[0]; }
+  if(!dmax) return {score:0,count:0,window:[],dmax:null, detail:[], audit:''};
   const window = []; for(let i=6;i>=0;i--) window.push(ymd(addDays(dmax,-i)));
   let count=0; const detail=[];
   for(const d of window){ const rec = dayMap.get(d); if(!rec){ detail.push({date:d,parts:[],times:0}); continue; }
-    const n = rec.parts.size; const times = n>=2?2:(n>=1?1:0); count += times; detail.push({date:d,parts:[...rec.parts],times}); }
+    const parts=[...rec.parts]; const n = parts.length; const times = n>=2?2:(n>=1?1:0); count += times; detail.push({date:d,parts,times}); }
   const score = Math.min(100, count*10);
-  return {score,count,window,dmax,detail};
+  const audit = detail.map(r=>`- ${r.date}｜parts=[${r.parts.join(', ')}]｜當日計次=${r.times}`).join('\n');
+  return {score,count,window,dmax,detail,audit};
 }
 
 const CATEGORY_DEFS = [
@@ -218,131 +210,42 @@ const CATEGORY_DEFS = [
   {key:'自我覺察', re:/(?=.*#mentalhealth)(?=.*#selfcontrol)/i},
   {key:'關係經營', re:/(?=.*#relationship)(?=.*#happywifehappylife)/i}
 ];
-
-function computeCategories(text, healthScore){
-  const lines = normalizeText(text).split(/\n/).map(s=>s.trim()).filter(Boolean);
-  const counts = new Map(CATEGORY_DEFS.map(c=>[c.key,0]));
-  for(const line of uniq(lines)){ // 去重：完全相同行只計一次
-    for(const c of CATEGORY_DEFS){ if(c.kind==='health') continue; if(c.re.test(line)) counts.set(c.key, counts.get(c.key)+1); }
-  }
-  // cap 100 *per category*
-  const result = CATEGORY_DEFS.map(c=>{
-    if(c.kind==='health') return {key:c.key, times:Math.round(healthScore/10), score:healthScore};
-    const times = counts.get(c.key) || 0; return {key:c.key, times, score:Math.min(100, times*10)};
-  });
-  return result;
-}
+function computeCategories(text, healthScore){ const lines = normalizeText(text).split(/\n/).map(s=>s.trim()).filter(Boolean); const counts = new Map(CATEGORY_DEFS.map(c=>[c.key,0])); for(const line of uniq(lines)){ for(const c of CATEGORY_DEFS){ if(c.kind==='health') continue; if(c.re.test(line)) counts.set(c.key, counts.get(c.key)+1); } } const result = CATEGORY_DEFS.map(c=>{ if(c.kind==='health') return {key:c.key, times:Math.round(healthScore/10), score:healthScore}; const times = counts.get(c.key) || 0; return {key:c.key, times, score:Math.min(100, times*10)}; }); return result; }
 
 /*****************
- * Sleep Parsing (強化版)
+ * Sleep V2 — strict format parser
  *****************/
-const TIME24 = /\b(?:[01]?\d|2[0-3])[:：][0-5]\d\b/;
-const TIME12 = /\b(1[0-2]|0?[1-9])\s?(am|pm)\b/;
-const TIME_CN_DAWN = /凌晨\s*([0-5]?\d)(?:[:：]([0-5]\d))?/;
-const BED_KW = /(上床|就寢|入睡|睡覺開始|sleep\s*start)/i;
-const DUR_FLOAT = /\b(\d+(?:\.\d+)?)\s*(h|小時)\b/i;
-const DUR_HM = /\b(\d+)\s*(?:h|小時)\s*(\d+)\s*(?:m|分)\b/i;
-const DUR_HHMM = /\b([0-1]?\d|2[0-3])[:：]([0-5]\d)\b/; // only if context says duration
-const DUR_MIN = /\b(\d+)\s*(min|分鐘)\b/i;
-const ENERGY = /(精神(?:指數)?|energy)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(?:\/\s*10|\/10|分)?/i;
-
-function tryExtractBedTime(line){
-  if(!BED_KW.test(line)) return null;
-  // precedence: 24h, 12h, 凌晨
-  let m = line.match(TIME24);
-  if(m){ return m[0]; }
-  m = line.match(TIME12);
-  if(m){ return `${m[1]}${m[2]}`; }
-  m = line.match(TIME_CN_DAWN);
-  if(m){ const hh = m[1].padStart(2,'0'); const mm = (m[2]||'00').padStart(2,'0'); return `${hh}:${mm}`; }
-  return null;
-}
-function parseBedToMinutes(s){
-  // returns minutes in [18:00..29:59] by shifting <12:00 as +24h then mod 24
-  let minutes=null;
-  if(/am|pm/.test(s)){
-    const mt = s.match(/(\d{1,2})(am|pm)/); if(mt){ let h=+mt[1]%12; if(mt[2]==='pm') h+=12; minutes=h*60; }
-  }else{
-    const mt = s.match(/(\d{1,2}):(\d{2})/); if(mt){ minutes= (+mt[1])*60 + (+mt[2]); }
+// Example line (anywhere in text):
+// [2025-09-28
+// 2:42pm ｜ sleep=9h | onBed=1:00am | energy=8/10 #health]
+function parseAmPmToMinutes(t){ const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/i); if(!m) return null; let h = (+m[1]) % 12; if(/pm/i.test(m[3])) h += 12; const min = (+m[2]); return h*60 + min; }
+function mapBedMinute(m){ if(m==null) return null; if(m < 360) m += 1440; if(m < 1080 && m >= 360) return null; return m; }
+function computeSleepV2(text){
+  const s = normalizeText(text);
+  const recRe = /\[(\d{4})-(\d{2})-(\d{2})[\s\S]*?\n[^\n]*?sleep\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*h[^\n]*?onbed\s*=\s*([0-9]{1,2}:[0-9]{2}\s*(?:am|pm))[^\n]*?energy\s*=\s*([0-9]+(?:\.[0-9]+)?)(?:\s*\/\s*10)?[\s\S]*?\]/gi;
+  const rows = []; let m;
+  while((m = recRe.exec(s))){
+    const d = `${m[1]}-${m[2]}-${m[3]}`;
+    const sleepH = parseFloat(m[4]);
+    const bedMin0 = parseAmPmToMinutes(m[5]);
+    const bedMin = mapBedMinute(bedMin0);
+    const eng = parseFloat(m[6]);
+    const ok = sleepH>=2 && sleepH<=14 && !isNaN(eng) && eng>=0 && eng<=10 && bedMin!==null;
+    rows.push({date:d, sleep:sleepH, bed:bedMin, bedRaw:m[5].trim(), energy:eng, ok});
   }
-  if(minutes==null) return null;
-  if(minutes<720) minutes += 1440; // <12:00 → +24h
-  // validity window 18:00–05:59 → [1080 .. 1799] in shifted space
-  const ok = (minutes>=1080 && minutes<= (5*60+59)+1440);
-  return ok ? minutes%1440 : null;
-}
-function tryExtractDurationHours(line){
-  let m = line.match(DUR_HM); if(m){ return (+m[1]) + (+m[2])/60; }
-  m = line.match(DUR_FLOAT); if(m){ return +m[1]; }
-  // context hint "睡了" or "duration"
-  if(/睡了|duration/i.test(line)){
-    m = line.match(DUR_HHMM); if(m){ return (+m[1]) + (+m[2])/60; }
-  }
-  m = line.match(DUR_MIN); if(m){ return (+m[1])/60; }
-  return null;
-}
-function tryExtractEnergy(line){
-  const m = line.match(ENERGY); return m ? +m[2] : null;
-}
-
-function computeSleep(text){
-  const raw = normalizeText(text);
-  const lines = raw.split(/\n/).map(s=>s.trim());
-  // Determine Dmax by dates in text
-  const dates=[]; for(const ln of lines){ const m=ln.match(DATE_RE)||ln.match(DATE_BRACKET_RE); if(m){ const y=+m[1],mo=+m[2]-1,d=+m[3]; dates.push(new Date(y,mo,d)); } }
-  if(!dates.length){ return {summary:"（找不到日期，無法計算睡眠區間）", audit:"", hash:""}; }
-  dates.sort((a,b)=>b-a); const Dmax = dates[0];
-  const windowSet = new Set(); for(let i=6;i>=0;i--) windowSet.add( ymd(addDays(Dmax,-i)) );
-
-  const rows=[]; const excluded=[];
-  for(const ln of uniq(lines)){
-    const m = ln.match(DATE_RE) || ln.match(DATE_BRACKET_RE); if(!m) continue; const dstr = `${m[1]}-${m[2]}-${m[3]}`;
-    if(!windowSet.has(dstr)) continue;
-
-    // one-pass extract per line
-    const bedStr = tryExtractBedTime(ln);
-    const dur = tryExtractDurationHours(ln);
-    const eng = tryExtractEnergy(ln);
-
-    let bedMin = null; if(bedStr) bedMin = parseBedToMinutes(bedStr);
-
-    const rec = {date:dstr, src:ln.slice(0,90), bed:bedMin, bedRaw:bedStr, dur:dur, eng:eng};
-
-    // apply bounds
-    let ok=true; let reasons=[];
-    if(bedStr && bedMin==null){ ok=false; reasons.push('上床時間超出 18:00–05:59 規則'); }
-    if(dur!=null && (dur<2 || dur>14)){ ok=false; reasons.push('睡眠時數超界 (2–14h)'); }
-    if(eng!=null && (eng<0 || eng>10)){ ok=false; reasons.push('精神指數超界 (0–10)'); }
-
-    if(ok) rows.push(rec); else excluded.push({date:dstr, src:rec.src, reason:reasons.join('、')});
-  }
-
-  // Averages
-  const beds = rows.filter(r=>r.bed!=null).map(r=>r.bed);
-  const durs = rows.filter(r=>r.dur!=null).map(r=>r.dur);
-  const engs = rows.filter(r=>r.eng!=null).map(r=>r.eng);
-  function avg(a){ if(!a.length) return null; return a.reduce((x,y)=>x+y,0)/a.length; }
-  const avgBed = avg(beds);
-  const avgDur = avg(durs);
-  const avgEng = avg(engs);
-
-  function bedTo12(m){ if(m==null) return '—'; let h=Math.floor(m/60), mm=m%60; const ap = h>=12? 'pm':'am'; h = h%12; if(h===0) h=12; return `${h}:${pad2(mm)}${ap}`; }
-
-  const summary = [
-    '🧾 結論整理',
-    `🛏️ 平均上床時間：${bedTo12(avgBed)}`,
-    `😴 平均睡眠時數：${avgDur!=null?avgDur.toFixed(2):'—'} 小時`,
-    `⚡ 平均精神指數：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`
-  ].join('\n');
-
-  // Audit block
-  const linesAudit = rows.map(r=>`- ${r.date}｜…${r.src}…｜上床 ${r.bedRaw?bedTo12(r.bed):'—'}｜時數 ${r.dur!=null?r.dur.toFixed(2)+'h':'—'}｜精神 ${r.eng!=null?(r.eng%1? r.eng.toFixed(2):r.eng)+'/10':'—'}`);
-  const stat = `\n\n✅ 統計：上床 ${beds.length} 筆｜時數 ${durs.length} 筆｜精神 ${engs.length} 筆\n→ 平均上床：${bedTo12(avgBed)}\n→ 平均時數：${avgDur!=null?avgDur.toFixed(2):'—'} h\n→ 平均精神：${avgEng!=null?avgEng.toFixed(2):'—'} / 10`;
-  const excl = excluded.length? ('\n\n🚫 排除清單：\n' + excluded.map(e=>`- ${e.date}｜…${e.src}…｜${e.reason}`).join('\n')) : '';
-
-  const hash = hashString(summary+"|"+linesAudit.join('\n')+stat+excl);
-  const audit = ['・命中條列（上床/時數/精神）：', ...linesAudit].join('\n') + stat + excl;
-
+  if(!rows.length) return {summary:'（找不到符合格式的睡眠紀錄）', audit:'', hash:''};
+  const dmax = rows.map(r=>parseYMD(r.date)).filter(Boolean).sort((a,b)=>b-a)[0];
+  const windowSet = new Set(); for(let i=6;i>=0;i--) windowSet.add( ymd(addDays(dmax,-i)) );
+  const inWin = rows.filter(r=>windowSet.has(r.date) && r.ok);
+  if(!inWin.length){ return {summary:`（最近 7 天無有效紀錄。視窗：${[...windowSet].join('、')}）`, audit:'', hash:''}; }
+  const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+  const avgSleep = avg(inWin.map(r=>r.sleep));
+  const avgBed = avg(inWin.map(r=>r.bed));
+  const avgEnergy = avg(inWin.map(r=>r.energy));
+  function bedFmt(m){ if(m==null) return '—'; if(m>=1440) m -= 1440; let h = Math.floor(m/60), mm = m%60; const ap = h>=12 ? 'pm' : 'am'; h = h%12; if(h===0) h=12; return `${h}:${String(mm).padStart(2,'0')}${ap}`; }
+  const summary = `🧾 睡眠一週平均（視窗：${[...windowSet].join('、')}）\n- 平均睡眠時間：${avgSleep.toFixed(2)} h\n- 平均 on-bed 時間：${bedFmt(avgBed)}\n- 平均精神 energy：${avgEnergy.toFixed(2)} / 10`;
+  const audit = inWin.map(r=>`- ${r.date}｜sleep=${r.sleep}h｜onBed=${r.bedRaw}｜energy=${r.energy}/10`).join('\n');
+  const hash = hashString(summary+'|'+audit);
   return {summary, audit, hash};
 }
 
@@ -350,11 +253,8 @@ function computeSleep(text){
  * Rendering
  *****************/
 function renderFixedTable(rows){
-  // rows: [{key, times, score}]
   const map = new Map(rows.map(r=>[r.key,r]));
-  function rowHTML(k){ const r = map.get(k) || {times:0,score:0};
-    return `<tr><td>${k}</td><td>${r.times} 次</td><td>${r.score} 分</td></tr>`;
-  }
+  function rowHTML(k){ const r = map.get(k) || {times:0,score:0}; return `<tr><td>${k}</td><td>${r.times} 次</td><td>${r.score} 分</td></tr>`; }
   const html = `
   <table>
     <thead>
@@ -373,32 +273,46 @@ function renderFixedTable(rows){
 }
 
 function doAll(){
-  const raw = $('#inputText').value||'';
-  const norm = normalizeText(raw);
+  const rawAll = $('#inputText').value||'';
+  const healthRaw = (typeof EXERCISE_TEXT==='string' && EXERCISE_TEXT.length) ? EXERCISE_TEXT : (document.querySelector('#inputTextPage2')?.value || '');
 
-  // Health index (7-day window)
-  const health = computeHealthIndex(raw);
-  const categories = computeCategories(raw, health.score);
-
+  const health = computeHealthIndex(healthRaw);
+  const categories = computeCategories(rawAll, health.score);
   const tableHTML = renderFixedTable(categories);
-  $('#scoreTableWrap').innerHTML = tableHTML + `<div style="margin-top:8px" class="muted">健康指數：最近七天（${health.window.join('、')}）共 <b>${health.count}</b> 次運動 → ${health.score} 分。` + (health.dmax?`（Dmax=${ymd(health.dmax)}）`:'') + `</div>`;
+  const sourceNote = healthRaw.trim()? '（資料來源：Page 2 運動輸入）' : '（⚠ 未填 Page 2，健康指數將為 0）';
+  $('#scoreTableWrap').innerHTML = tableHTML + `<div style="margin-top:8px" class="muted">健康指數：最近七天（${health.window.join('、')}）共 <b>${health.count}</b> 次運動 → ${health.score} 分。` + (health.dmax?`（Dmax=${ymd(health.dmax)}）`:'') + ` ${sourceNote}</div>`;
+  $('#exerciseAudit').textContent = health.audit || '（無資料可列）';
 
-  // Sleep module
-  const sleep = computeSleep(raw);
-  $('#sleepSummary').textContent = sleep.summary;
-  $('#sleepAudit').textContent = sleep.audit + `\n\n🔒 Fingerprint | L=${makeFingerprint(raw).L}, C=${makeFingerprint(raw).C}, H=${makeFingerprint(raw).H}`;
+  // Sleep V2
+  const sleep = computeSleepV2(rawAll);
+  const sSum = document.getElementById('sleepV2Summary');
+  const sAud = document.getElementById('sleepV2Audit');
+  if(sSum && sAud){ sSum.textContent = sleep.summary; sAud.textContent = sleep.audit; }
 
-  // Warning on inconsistent results with identical input
-  const fp = makeFingerprint(raw);
-  const cur = {L:fp.L,C:fp.C,H:fp.H, tableHash:hashString(tableHTML), sleepHash:sleep.hash};
+  const fp = makeFingerprint(rawAll + '\n\n__EXERCISE__\n' + healthRaw);
+  const cur = {L:fp.L,C:fp.C,H:fp.H, tableHash:hashString(tableHTML)};
   let alertMsg = '';
-  if(lastFingerprint && lastFingerprint.L===cur.L && lastFingerprint.C===cur.C && lastFingerprint.H===cur.H){
-    if(lastFingerprint.tableHash!==cur.tableHash || lastFingerprint.sleepHash!==cur.sleepHash){
-      alertMsg = '⚠️ 偵測到結果不一致：請檢查是否有判斷邏輯或統計異動，或標記順序導致遺漏。';
-    }
-  }
+  if(lastFingerprint && lastFingerprint.L===cur.L && lastFingerprint.C===cur.C && lastFingerprint.H===cur.H){ if(lastFingerprint.tableHash!==cur.tableHash){ alertMsg = '⚠️ 偵測到結果不一致：請檢查是否有判斷邏輯或統計異動，或標記順序導致遺漏。'; } }
   lastFingerprint = cur;
   $('#alertBox').textContent = alertMsg;
+}
+
+/*****************
+ * Tests (sleep tests omitted here)
+ *****************/
+function runTests(){
+  const out=[]; const ok = (name, cond, left, right)=> out.push(`${cond? '✅':'❌'} ${name}${cond?'':`\n   got: ${left}\n   expected: ${right}`}`);
+  const t1 = `
+[2025-09-20]
+2025-09-20｜chest smith press
+2025-09-20｜swim 1km
+[2025-09-26]
+2025-09-26｜walk 7k steps`;
+  const h1 = computeHealthIndex(t1);
+  ok('T1 count==3', h1.count===3, h1.count, 3);
+  ok('T1 score==30', h1.score===30, h1.score, 30);
+  ok('T1 dmax==2025-09-26', (h1.dmax && ymd(h1.dmax)==='2025-09-26'), h1.dmax && ymd(h1.dmax), '2025-09-26');
+  document.getElementById('testOut').textContent = out.join('\n');
 }
 
 /*****************
@@ -406,86 +320,51 @@ function doAll(){
  *****************/
 $('#next1').addEventListener('click',()=>{ if(!$('#inputText').value.trim()){ alert('請先貼上資料'); return; } setStep(2); });
 $('#back1').addEventListener('click',()=>setStep(1));
-function appendFromPage2(){
-  const el = document.querySelector('#inputTextPage2');
-  if(!el) return;
-  const v = el.value.trim();
-  if(v){
-    const base = document.querySelector('#inputText').value.trim();
-    document.querySelector('#inputText').value = (base? base+"
+$('#back2').addEventListener('click',()=>{ setStep(2); const p2=$('#inputTextPage2'); if(p2) p2.value=''; });
 
-":"") + v;
-  }
-}
+let EXERCISE_TEXT='';
+function appendFromPage2(){ const el = document.querySelector('#inputTextPage2'); if(!el) return; const v = el.value.trim(); EXERCISE_TEXT = v; }
 $('#confirmHasWorkout').addEventListener('click',()=>{ appendFromPage2(); setStep(3); doAll(); });
 $('#confirmNoWorkout').addEventListener('click',()=>{ appendFromPage2(); setStep(3); doAll(); });
-$('#recalc').addEventListener('click',()=>doAll());
-$('#back2').addEventListener('click',()=>setStep(2));
-$('#copyTable').addEventListener('click',()=>{
-  const node = $('#scoreTableWrap');
-  const txt = node.innerText.replace(/\n{2,}/g,'\n');
-  navigator.clipboard.writeText(txt).then(()=>{
-    alert('已複製評分表至剪貼簿');
-  });
-});
-$('#copySleep').addEventListener('click',()=>{
-  const block = '🧾 結論整理\n' + $('#sleepSummary').innerText + '\n\n🧪 睡眠自我驗證\n' + $('#sleepAudit').innerText;
-  navigator.clipboard.writeText(block).then(()=>alert('已複製睡眠區塊'));
-});
-$('#clear').addEventListener('click',()=>{ $('#inputText').value=''; lastFingerprint=null; });
 
+$('#recalc').addEventListener('click',()=>doAll());
+$('#copyTable').addEventListener('click',()=>{ const node = $('#scoreTableWrap'); const txt = node.innerText.replace(/\n{2,}/g,'\n'); navigator.clipboard.writeText(txt).then(()=>{ alert('已複製評分表至剪貼簿'); }); });
+$('#copySleepV2').addEventListener('click',()=>{ const block = (document.getElementById('sleepV2Summary')?.innerText||'') + '\n\n' + (document.getElementById('sleepV2Audit')?.innerText||''); navigator.clipboard.writeText(block).then(()=>alert('已複製睡眠區塊')); });
+$('#clear').addEventListener('click',()=>{ $('#inputText').value=''; const p2=$('#inputTextPage2'); if(p2) p2.value=''; EXERCISE_TEXT=''; lastFingerprint=null; $('#scoreTableWrap').innerHTML=''; $('#exerciseAudit').textContent=''; $('#testOut').textContent=''; document.getElementById('sleepV2Summary').textContent=''; document.getElementById('sleepV2Audit').textContent=''; });
 $('#demo').addEventListener('click',()=>{
   const demo = `
 [2025-09-20]
 2025-09-20｜#pomodoro #finance｜閱讀《漫步華爾街》30m
-2025-09-20｜chest smith press 90kg x 10｜sleep start 23:40｜睡了 6h｜精神 6/10
+2025-09-20｜chest smith press 90kg x 10
 
 [2025-09-21]
 2025-09-21｜#pomodoro #english｜shadowing 20m
-2025-09-21｜swim 1km｜duration 01:10｜energy 7/10｜上床 12:10am
+2025-09-21｜swim 1km
 
 [2025-09-22]
-2025-09-22｜#pomodoro #review｜整理成功日記 25m｜入睡 0:15｜睡眠時數 6.5h｜精神指數 5/10
+[2025-09-22\n11:55pm ｜ sleep=6.2h | onBed=11:40pm | energy=6/10 #health]
 
 [2025-09-23]
-2025-09-23｜#mentalhealth #selfcontrol｜冥想 10m
-2025-09-23｜run 5k｜上床 凌晨 0:30｜睡了 6h 30m｜energy 6/10
+2025-09-23｜run 5k
+[2025-09-23\n12:05am ｜ sleep=6.0h | onBed=12:05am | energy=5/10 #health]
 
 [2025-09-24]
-2025-09-24｜#relationship #happywifehappylife｜晚餐約會
-2025-09-24｜back row machine｜sleep start 23:55｜睡眠時數 7.2 小時｜精神 7/10
+[2025-09-24\n12:10am ｜ sleep=7.2h | onBed=12:10am | energy=7/10 #health]
 
 [2025-09-25]
-2025-09-25｜#pomodoro #finance｜畫 EV 決策樹 40m
 2025-09-25｜walk 7k steps
 
 [2025-09-26]
-2025-09-26｜#pomodoro #review｜反思整理 25m
-2025-09-26｜climb boulder v2｜上床 0:05｜睡了 6h｜精神 5/10
+[2025-09-26\n12:05am ｜ sleep=6h | onBed=12:05am | energy=5/10 #health]
 `;
   $('#inputText').value = demo.trim();
 });
 
+const runBtn = document.querySelector('#runTests');
+if(runBtn) runBtn.addEventListener('click', runTests);
+
 // default to Page 1
 setStep(1);
 </script>
-<script>(function(){
-  function showBootMsg(msg){ var box=document.getElementById('bootMsg'); if(box) box.textContent=msg; }
-  window.addEventListener('error', function(e){ showBootMsg('⚠️ 腳本錯誤：'+(e && e.message ? e.message : '未知錯誤')); });
-  function safeBind(){
-    var next=document.getElementById('next1');
-    if(next && !next.dataset.bound){
-      next.dataset.bound='1';
-      next.addEventListener('click', function(){
-        var t=document.getElementById('inputText');
-        if(!t || !t.value.trim()){ alert('請先貼上資料'); return; }
-        setStep(2);
-        var p2=document.getElementById('inputTextPage2'); if(p2) p2.value='';
-      });
-    }
-  }
-  document.addEventListener('DOMContentLoaded', safeBind);
-  setTimeout(safeBind, 0);
-})();</script>
 </body>
 </html>
