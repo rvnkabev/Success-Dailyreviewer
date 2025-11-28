@@ -1,614 +1,370 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>Success Diary</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Success Daily Reviewer — Sleep V2</title>
   <style>
-    body{
-      font-family: Arial, sans-serif;
-      padding: 1em;
-      background: #f9f9f9;
-      font-size: 240%;
-      text-align: center;
-    }
-    .page{display:none;}
-    .active{display:block;}
-    button{
-      margin: 0.4em;
-      padding: 0.3em 1em;
-      font-size: 90%;
-      cursor: pointer;
-    }
-    input,textarea,select{
-      width: 90%;
-      padding: 0.5em;
-      font-size: 90%;
-      margin: 0.6em 0;
-    }
-    .row{ display:flex; gap:0.6em; justify-content:center; align-items:center; flex-wrap:wrap; }
-    .row > * { flex:1 1 240px; max-width:480px; }
-    .hint{font-size: 60%; color:#666; margin-top:-0.4em}
-    .small{font-size: 70%;}
-
-    /* ===== Mobile-friendly ToDo cards ===== */
-    .todo-wrap { text-align:left; max-width:640px; margin:0 auto; }
-    .toolbar { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:0.2em 0 0.6em; }
-    .toolbar button { padding: 0.4em 0.8em; font-size: 80%; }
-
-    .todo-input { display:flex; gap:8px; align-items:center; justify-content:center; }
-    .todo-input input { flex: 1 1 auto; max-width:none; }
-    .todo-input button { padding:0.4em 0.8em; font-size: 90%; }
-
-    .cards { display:grid; grid-template-columns: 1fr; gap:12px; }
-    @media (min-width:420px){ .cards { grid-template-columns: 1fr 1fr; } }
-
-    .card {
-      display:flex; align-items:center; gap:12px;
-      background:#fff; border-radius:14px; border:1px solid #ddd;
-      padding:14px 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-      min-height:56px;
-    }
-    .card input[type="checkbox"] { width:26px; height:26px; }
-    .card .text { font-size: 80%; line-height:1.2; }
-    .chip { display:inline-block; border:1px solid #ccc; border-radius:999px; padding:0.05em 0.5em; font-size:65%; margin-left:6px; color:#666; }
-
-    .card.selected { border-color:#7aa2ff; box-shadow:0 0 0 3px rgba(122,162,255,0.2); }
-
-    .sticky-bar {
-      position: sticky; bottom:0; left:0; right:0;
-      background: #f9f9f9;
-      padding: 8px 6px 2px;
-      margin-top: 8px;
-    }
-    .sticky-actions { display:flex; gap:10px; justify-content:center; }
-    .primary { background:#7aa2ff; color:#fff; border:none; border-radius:10px; padding:0.5em 0.9em; }
-    .success { background:#25d0a6; color:#fff; border:none; border-radius:10px; padding:0.5em 0.9em; }
-
-    .pill{display:inline-block; border:1px solid #ccc; border-radius:999px; padding:0.2em 0.6em; margin:0.2em; font-size:80%;}
+    :root{ --bg:#0b1020; --panel:#121a33; --ink:#e9eefc; --muted:#9fb2ff; --accent:#7aa2ff; --accent2:#25d0a6; --warn:#ffb02e; --danger:#ff5a78; --ok:#21d19f; }
+    html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,#0b1020 0%,#0e1430 100%);color:var(--ink)}
+    .wrap{max-width:1100px;margin:0 auto;padding:28px}
+    h1{margin:0 0 8px;font-size:28px;letter-spacing:.3px}
+    .sub{color:var(--muted);margin-bottom:18px}
+    .card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .row{display:grid;gap:16px}
+    .pad{padding:18px}
+    textarea{width:100%;min-height:280px;border-radius:12px;background:#0c1431;color:var(--ink);border:1px solid rgba(255,255,255,.08);padding:12px 14px;font-size:14px;line-height:1.5}
+    input[type="text"],select{width:100%;border-radius:10px;background:#0c1431;color:var(--ink);border:1px solid rgba(255,255,255,.08);padding:10px 12px;font-size:14px}
+    .btns{display:flex;flex-wrap:wrap;gap:10px}
+    button{border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#0a0f1f;font-weight:700;cursor:pointer}
+    button.secondary{background:#1b254d;color:var(--ink);border:1px solid rgba(255,255,255,.08)}
+    button.ghost{background:transparent;border:1px dashed rgba(255,255,255,.25);color:var(--ink)}
+    .hidden{display:none}
+    .steps{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+    .step{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);color:var(--muted)}
+    .step.active{background:var(--accent2);color:#07121c;border-color:transparent}
+    .grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    table{width:100%;border-collapse:collapse;background:#0d1636;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+    th{color:#bcd0ff;background:#101a3e}
+    code,kbd{background:#0a1231;border:1px solid rgba(255,255,255,.08);padding:2px 6px;border-radius:8px;color:#cde}
+    .pill{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:#0d1636}
+    .tiny{font-size:12px;color:#9fb2ff}
+    .hr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);margin:14px 0}
+    pre.audit{white-space:pre-wrap;background:#0a1231;border:1px solid rgba(255,255,255,.08);padding:12px;border-radius:12px;max-height:320px;overflow:auto}
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <h1>Success Daily Reviewer</h1>
+    <div class="sub">三頁流程｜Page 1 輸入 → Page 2 運動紀錄 → Page 3 統計與輸出（含 Sleep V2）</div>
 
-<!-- 1 - Main categories -->
-<div class="page active" id="page1">
-  <h2>Select Main Category</h2>
-  <button onclick="selectCategory('Health')">Health</button>
-  <button onclick="selectCategory('MentalHealth')">Mental&nbsp;Health</button>
-  <button onclick="selectCategory('Relationship')">Relationship</button>
-  <button onclick="selectCategory('Finance')">Finance</button>
-  <button onclick="selectCategory('Work')">Work</button>
-  <button onclick="selectCategory('Pomodoro')">Pomodoro</button>
-  <button onclick="selectCategory('TonightToDoList')">Tonight ToDoList</button>
-  <button onclick="selectCategory('PainAnxietyDaily')">Pain/anxietyDaily</button>
-  <button onclick="selectCategory('Reward')">Reward</button>
-  <button onclick="selectCategory('Other')">Other</button>
-</div>
-
-<!-- 2 - Sub-categories (generic) -->
-<div class="page" id="pageSub">
-  <h2 id="subCategoryTitle"></h2>
-  <div id="subButtons"></div>
-</div>
-
-<!-- 2b - Relationship tag layer (#eat / #desire) -->
-<div class="page" id="pageRelTags">
-  <h2 id="relTagTitle"></h2>
-  <div id="relTagButtons"></div>
-</div>
-
-<!-- NEW: Dopamine Action step 1 (choose level) -->
-<div class="page" id="pageDopa">
-  <h2>MentalHealth — Dopamine Action</h2>
-  <div class="row" style="justify-content:center">
-    <button class="pill" onclick="chooseDopa('[[Low Dopamine]]','Low Dopamine')">Low Dopamine</button>
-    <button class="pill" onclick="chooseDopa('[[Middle Dopamine]]','Middle Dopamine')">Middle Dopamine</button>
-    <button class="pill" onclick="chooseDopa('[[High Dopamine]]','High Dopamine')">High Dopamine</button>
-    <button class="pill" onclick="chooseDopa('[[Chaos]]','Chaos')">Chaos</button>
-  </div>
-  <button style="margin-top:10px;" onclick="goHome()">Cancel</button>
-</div>
-
-<!-- NEW: Dopamine Action step 2 (enter event) -->
-<div class="page" id="pageDopaForm">
-  <h2 id="dopaFormTitle">Dopamine Action</h2>
-  <p class="small" id="dopaFormTime"></p>
-  <input type="text" id="dopaEvent" placeholder="剛剛發生了什麼？（例：看股票波動、刷短片、想吃甜食…）" />
-  <div class="small" style="opacity:0.8">不顯示內部代碼；背景會附上等級標籤</div>
-  <button onclick="saveDopaEvent()">Save</button>
-  <button onclick="gotoDopamineAction()" style="margin-left:6px;">Back</button>
-</div>
-
-<!-- 3 - Free-text input -->
-<div class="page" id="pageInput">
-  <h2 id="selectedCategoryLabel"></h2>
-  <p id="currentTime"></p>
-  <input type="text" id="content" placeholder="Describe here…" />
-  <div class="small" id="autoTagsHint"></div>
-  <button onclick="saveToNotes()">Save</button>
-</div>
-
-<!-- 4 - Health form -->
-<div class="page" id="pageHealth">
-  <h2>Health — Daily Check-in</h2>
-  <p id="healthTime" class="small"></p>
-  <div class="row">
-    <div>
-      <label for="sleepHours" class="small">Sleeping hours</label>
-      <select id="sleepHours">
-        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-        <option value="7" selected>7</option><option value="8">8</option><option value="9">9</option>
-        <option value="10">10</option><option value="11">11</option><option value="12">12</option>
-      </select>
-    </div>
-    <div>
-      <label for="onBedTime" class="small">On bed time</label>
-      <input type="time" id="onBedTime" />
-      <div class="hint">Default 9:30pm</div>
-    </div>
-    <div>
-      <label for="energy" class="small">Energy (1–10)</label>
-      <select id="energy">
-        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-        <option value="7" selected>7</option><option value="8">8</option><option value="9">9</option>
-        <option value="10">10</option>
-      </select>
-    </div>
-  </div>
-  <textarea id="healthNotes" placeholder="Optional notes (diet, symptoms, meds, etc.)"></textarea>
-  <button onclick="saveHealth()">Save</button>
-  <!-- NEW button: dip face into ice water -->
-  <button onclick="logIceWater()" style="margin-left:6px;">Dip face into ice water</button>
-  <button onclick="goHome()" style="margin-left:6px;">Cancel</button>
-</div>
-
-<!-- 5 - Tonight ToDoList (MOBILE-FIRST) -->
-<div class="page" id="pageTodo">
-  <h2>Tonight ToDoList</h2>
-  <div class="small" id="todoDateTime"></div>
-
-  <div class="todo-wrap">
-    <div class="toolbar">
-      <button onclick="selectAllTodos()">全選</button>
-      <button onclick="clearAllTodos()">清空</button>
+    <div class="steps">
+      <div class="step" id="badge1">1. 輸入資料</div>
+      <div class="step" id="badge2">2. 運動紀錄（僅此頁用於健康指數）</div>
+      <div class="step" id="badge3">3. 統計與輸出</div>
     </div>
 
-    <div class="todo-input">
-      <input id="todoNew" type="text" placeholder="新增項目…（如：買菜、洗衣）" />
-      <button onclick="addTodoFromInput()">＋</button>
-    </div>
-
-    <div class="cards" id="todoCards"></div>
-
-    <div class="sticky-bar">
-      <div class="sticky-actions">
-        <button class="primary" onclick="saveTonight('planned')">儲存為 Planned</button>
-        <button class="success" onclick="saveTonight('done')">儲存為 Done</button>
+    <!-- Page 1 -->
+    <section class="card pad" id="page1">
+      <div class="row">
+        <div>
+          <h3>Page 1 — 貼上你的每日紀錄（供分類與 Sleep V2 使用）</h3>
+          <p class="muted">建議格式：每行一條紀錄，或以 <code>[YYYY-MM-DD ...]</code> 包裹。Sleep V2 的專用格式見 Page 3 說明。</p>
+        </div>
+        <textarea id="inputText" placeholder="在此貼上你的紀錄文本…"></textarea>
+        <div class="grid-auto">
+          <div class="pill">時區：Asia/Tokyo</div>
+          <div class="pill">日期解析：<kbd>YYYY-MM-DD</kbd> / <kbd>[YYYY-MM-DD]</kbd></div>
+        </div>
+        <div class="btns">
+          <button id="next1">下一步：運動紀錄 →</button>
+          <button class="secondary" id="demo">載入範例資料</button>
+          <button class="ghost" id="clear">清空</button>
+        </div>
       </div>
-      <div class="small" style="margin-top:4px;">可多選；儲存會寫入 #tonighttodolist 與 status</div>
-    </div>
+    </section>
+
+    <!-- Page 2 -->
+    <section class="card pad hidden" id="page2">
+      <h3>Page 2 — 運動紀錄（僅此頁用於「健康指數」計算）</h3>
+      <p class="muted">規則：同一 <code>[YYYY-MM-DD]</code> 區段（或同日行首日期）若含 2 個以上不同部位（如 Chest 與 Swim），則當天計 <strong>2 次運動</strong>；否則 <strong>1 次</strong>。最近七天（含基準日）每次 10 分、上限 100 分。支援 <code>[YYYY-MM-DD]</code>、<code>YYYY-MM-DD</code>（行首）與 <code>YYYY/M/D</code>（行首）。</p>
+      <textarea id="inputTextPage2" placeholder="（僅此處文字會用來算健康指數）例如：
+[2025-06-10] chest
+2025/6/10, Chest, Middle Chest, smith Machine, 80kg, 13 reps, 1 sets,
+2025/6/10, Swim, Pool, 100m"></textarea>
+      <div class="tiny">提示：Page 1 用於分類與 Sleep V2；健康指數只來自 Page 2。</div>
+      <div class="btns" style="margin-top:10px">
+        <button id="confirmHasWorkout">計算 →</button>
+        <button class="secondary" id="confirmNoWorkout">沒有紀錄也要統計（健康指數將為 0） →</button>
+        <button class="ghost" id="back1">← 返回上一步</button>
+      </div>
+    </section>
+
+    <!-- Page 3 -->
+    <section class="card pad hidden" id="page3">
+      <div>
+        <h3>Page 3 — 六類評分表（固定格式）</h3>
+        <div id="scoreTableWrap"></div>
+        <div class="hr"></div>
+        <div class="btns">
+          <button id="copyTable">複製評分表</button>
+          <button class="secondary" id="recalc">重新計算</button>
+          <button class="ghost" id="back2">← 返回上一步</button>
+        </div>
+        <div id="alertBox" class="muted" style="margin-top:10px"></div>
+      </div>
+
+      <div class="hr"></div>
+      <h3>睡眠指數（簡化輸入 / Sleep V2）</h3>
+      <div class="tiny">輸入格式（僅統計最近 7 天，依 <code>Dmax-6 … Dmax</code> 視窗）：<br><code>[YYYY-MM-DD\nHH:MMam/pm ｜ sleep=9h | onBed=1:00am | energy=8/10 #health]</code></div>
+      <div id="sleepV2Summary" class="pad" style="background:#0d1636;border-radius:12px;border:1px solid rgba(255,255,255,.08);margin-top:8px"></div>
+      <pre id="sleepV2Audit" class="audit mono"></pre>
+      <div class="btns"><button id="copySleepV2">複製睡眠區塊</button></div>
+
+      <div class="hr"></div>
+      <h3>🧪 運動自我驗證</h3>
+      <div class="tiny">列出最近七天每一日偵測到的部位關鍵字與當日計次（1 或 2）。</div>
+      <pre id="exerciseAudit" class="audit mono"></pre>
+
+      <details class="test">
+        <summary>🧪 自動化測試（點我展開 / 收合）</summary>
+        <div class="muted" style="margin:8px 0">這些測試不會更改你的資料，僅用內建字串驗證計算邏輯。</div>
+        <div class="btns"><button id="runTests">Run Tests</button></div>
+        <pre id="testOut" class="mono" style="white-space:pre-wrap"></pre>
+      </details>
+    </section>
+
   </div>
-  <button style="margin-top:10px;" onclick="goHome()">Cancel</button>
-</div>
 
 <script>
-/** ---------- Config ---------- **/
-const categoryMap = {
-  Health: [],
-  MentalHealth: ["DelayGratification", "SelfControl", "ErrorLearning", "New", "Desire", "Anxiety", "DopamineAction", "Other"],
-  Relationship: ["HappyWifeHappyLife", "Friendship", "Father", "Mother", "Wife", "Other"],
-  Finance: [],
-  Work: ["A12", "MEWP", "Communication", "Other"],
-  Pomodoro: ["English", "Finance", "Reading", "Review"],
-  TonightToDoList: [],
-  PainAnxietyDaily: [],                 // NEW main category (free text, special tag)
-  Reward: ["抱石美女", "打機老婆（30mins)"], // NEW main category with 2 quick actions
-  Other: []
-};
-
-const relationshipPersons = new Set(["HappyWifeHappyLife","Friendship","Father","Mother","Wife","Other"]);
-const relSecondTags = ["#eat", "#desire"];
-
-/** NEW: Tag override map for exact tags (case-sensitive / with slash) **/
-const tagOverrideByCategory = {
-  PainAnxietyDaily: "#Pain/anxietyDaily"
-};
-
-let selectedCategory = '';
-let selectedSubCategory = '';
-let selectedRelPerson = '';
-let selectedRelSecondTag = '';
-
-/** NEW: dopamine token holder **/
-let selectedDopaToken = '';  // e.g. '[[Low Dopamine]]'
-let selectedDopaLabel = '';  // UI-only label without [[...]]
-
-/** ---------- Time helpers ---------- **/
-const fmtTime = () => {
-  const d = new Date();
-  let h = d.getHours(), m = d.getMinutes().toString().padStart(2, '0');
-  const am = h >= 12 ? 'pm' : 'am';
-  h = h % 12 || 12;
-  return `${h}:${m}${am}`;
-};
-const fmtDate = () => {
-  const now = new Date();
-  return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-};
-
-/** ---------- UI helpers ---------- **/
-const hidePages = () => document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-const goHome = () => { hidePages(); document.getElementById('page1').classList.add('active'); };
-
-/** ---------- Category flow ---------- **/
-function selectCategory(cat) {
-  selectedCategory = cat;
-  selectedSubCategory = '';
-  selectedRelPerson = '';
-  selectedRelSecondTag = '';
-
-  if (cat === 'Health') return gotoHealth();
-  if (cat === 'TonightToDoList') return gotoTodo();
-
-  // NEW: Reward → show two quick actions
-  if (cat === 'Reward') {
-    buildSubButtons(categoryMap.Reward);
-    hidePages(); document.getElementById('pageSub').classList.add('active');
-    return;
-  }
-
-  const subs = categoryMap[cat] || [];
-  if (cat === 'Pomodoro') {
-    buildSubButtons(subs);
-    hidePages(); document.getElementById('pageSub').classList.add('active');
-    return;
-  }
-  if (subs.length > 0) {
-    buildSubButtons(subs);
-    hidePages(); document.getElementById('pageSub').classList.add('active');
-  } else {
-    // Default: free text input
-    gotoInput();
-  }
-}
-
-function buildSubButtons(arr) {
-  const wrap = document.getElementById('subButtons');
-  wrap.innerHTML = '';
-  // Display label tweak for Pain/anxietyDaily
-  const pretty = selectedCategory === 'PainAnxietyDaily' ? 'Pain/anxietyDaily' : selectedCategory;
-  document.getElementById('subCategoryTitle').textContent = pretty;
-  arr.forEach(s => {
-    const b = document.createElement('button');
-    b.textContent = s;
-    b.onclick = () => selectSubCategory(s);
-    wrap.appendChild(b);
+/*****************
+ * Helpers
+ *****************/
+const $ = (q)=>document.querySelector(q);
+function setStep(n){
+  [1,2,3].forEach(i=>$('#badge'+i).classList.toggle('active', i===n));
+  ['#page1','#page2','#page3'].forEach((id,idx)=>{
+    const el = document.querySelector(id);
+    if(idx===n-1) el.classList.remove('hidden'); else el.classList.add('hidden');
   });
 }
-
-function selectSubCategory(sub) {
-  selectedSubCategory = sub;
-
-  // MentalHealth special: Dopamine Action page -> step 1
-  if (selectedCategory === 'MentalHealth' && sub === 'DopamineAction') {
-    return gotoDopamineAction();
-  }
-
-  // NEW: Reward quick save paths
-  if (selectedCategory === 'Reward') {
-    return saveReward(sub);
-  }
-
-  if (selectedCategory === 'Relationship' && relationshipPersons.has(sub)) {
-    selectedRelPerson = sub;
-    showRelSecondTags(sub);
-    return;
-  }
-  if (selectedCategory === 'Pomodoro') {
-    logPomodoro();
-  } else {
-    gotoInput();
-  }
+function toHalfWidth(str){
+  return str.replace(/[！-～]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/　/g, ' ');
 }
+function normalizeText(s){ return toHalfWidth(s).replace(/[|:\uFF5C\uFF1A]/g,'｜').toLowerCase(); }
+function uniq(arr){ return Array.from(new Set(arr)); }
+function pad2(n){ return (n<10?'0':'')+n; }
 
-function showRelSecondTags(person) {
-  hidePages();
-  document.getElementById('relTagTitle').textContent = `Relationship / ${person}`;
-  const wrap = document.getElementById('relTagButtons');
-  wrap.innerHTML = '';
-  relSecondTags.forEach(t => {
-    const btn = document.createElement('button');
-    btn.textContent = t;
-    btn.onclick = () => {
-      selectedRelSecondTag = t;
-      selectedSubCategory = `${person}/${t}`;
-      gotoInput(true);
-    };
-    wrap.appendChild(btn);
-  });
-  document.getElementById('pageRelTags').classList.add('active');
-}
+/*****************
+ * Parsing Dates
+ *****************/
+const DATE_RE = /\b(\d{4})-(\d{2})-(\d{2})\b/;
+const DATE_SLASH_HEAD = /^\b(\d{4})\/(\d{1,2})\/(\d{1,2})\b/; // YYYY/M/D at line start
+function parseYMD(s){ const m = s.match(DATE_RE); if(!m) return null; const y=+m[1],mo=+m[2]-1,d=+m[3]; const dt = new Date(y,mo,d); if(dt.getFullYear()!==y||dt.getMonth()!==mo||dt.getDate()!==d) return null; return dt; }
+function ymd(dt){ return dt.getFullYear()+"-"+pad2(dt.getMonth()+1)+"-"+pad2(dt.getDate()); }
+function addDays(dt,delta){ const t=new Date(dt); t.setDate(t.getDate()+delta); return t; }
 
-function gotoInput(showAutoHint=false) {
-  hidePages();
-  const labelRaw = selectedSubCategory ? `${selectedCategory}/${selectedSubCategory}` : selectedCategory;
-  const label = labelRaw === 'PainAnxietyDaily' ? 'Pain/anxietyDaily' : labelRaw;
-  document.getElementById('selectedCategoryLabel').textContent = label;
-  document.getElementById('currentTime').textContent = fmtTime();
-  document.getElementById('content').value = '';
-  document.getElementById('autoTagsHint').textContent = showAutoHint ? '已選：' + selectedSubCategory : '';
-  document.getElementById('pageInput').classList.add('active');
-}
+/*****************
+ * Fingerprint
+ *****************/
+let lastFingerprint = null;
+function makeFingerprint(text){ const L = text.split(/\n/).length; const C = [...text].length; let sum=0; for(const ch of text){ sum += ch.codePointAt(0)||0; } const H = sum % 10000; return {L,C,H}; }
+function hashString(s){ let h=0; for(let i=0;i<s.length;i++){ h=((h<<5)-h + s.charCodeAt(i))|0; } return (h>>>0).toString(16); }
 
-/** ---------- Health page ---------- **/
-function gotoHealth() {
-  hidePages();
-  document.getElementById('sleepHours').value = '7';
-  document.getElementById('onBedTime').value = '21:30';
-  document.getElementById('energy').value = '7';
-  document.getElementById('healthNotes').value = '';
-  document.getElementById('healthTime').textContent = `${fmtDate()} ${fmtTime()}`;
-  document.getElementById('pageHealth').classList.add('active');
-}
-
-/** ---------- Tonight ToDoList (mobile-first) ---------- **/
-const DEFAULT_TODOS = [
-  { text: "買雞" },
-  { text: "整雞水", tag:"1.5hr" },
-  { text: "整雞水", tag:"30mins" },
-  { text: "運動" },
-  { text: "游水" }
+/*****************
+ * Exercise detection
+ *****************/
+const PART_PATTERNS = [
+  {key:'chest', re:/(\bchest\b|bench(\s|-)press|incline\s+bench|push[- ]?up|胸(?=\s|\p{P}|$)|胸推|臥推)/iu},
+  {key:'back', re:/(\bback\b|row(\s|-)machine|lat\s+pull(-| )?down|划船|引體向上|背(?=\s|\p{P}|$))/iu},
+  {key:'shoulder', re:/(shoulder|overhead\s+press|側平舉|肩|肩推)/iu},
+  {key:'legs', re:/(\bleg(s)?\b|squat|deadlift|lunge|腿|深蹲|硬舉|箭步)/iu},
+  {key:'arms', re:/(biceps?|triceps?|curl|臂|二頭|三頭)/iu},
+  {key:'core', re:/(core|abs|plank|仰臥起坐|核心)/iu},
+  {key:'swim', re:/(\bswim\b|游泳)/iu},
+  {key:'run', re:/(\brun(ning)?\b|\b5k\b|10k|半馬|全馬|跑步)/iu},
+  {key:'walk', re:/(\bwalk(ing)?\b|步行|健走|\d+\s?k\s?steps)/iu},
+  {key:'bike', re:/(bike|cycling|spinning|騎車|單車|飛輪)/iu},
+  {key:'yoga', re:/(yoga|瑜伽)/iu},
+  {key:'climb', re:/(climb|boulder|攀岩|抱石)/iu},
+  {key:'cardio', re:/(cardio|有氧)/iu},
+  {key:'row', re:/(row(ing)?\b|划船機)/iu}
 ];
+function detectPartsInLine(line){ const found = new Set(); for(const {key,re} of PART_PATTERNS){ if(re.test(line)) found.add(key); } return found; }
 
-function gotoTodo() {
-  hidePages();
-  document.getElementById('todoDateTime').textContent = `${fmtDate()} ${fmtTime()}`;
-  const box = document.getElementById('todoCards');
-  box.innerHTML = '';
-  DEFAULT_TODOS.forEach(addTodoCard);
-  document.getElementById('todoNew').value = '';
-  document.getElementById('pageTodo').classList.add('active');
-}
-
-function addTodoCard(item) {
-  const box = document.getElementById('todoCards');
-  const id = 't_' + Math.random().toString(36).slice(2,8);
-  const label = document.createElement('label');
-  label.className = 'card';
-  label.innerHTML = `
-    <input type="checkbox" id="${id}">
-    <div class="text">${escapeHTML(item.text)}${item.tag?` <span class="chip">${escapeHTML(item.tag)}</span>`:''}</div>
-  `;
-  label.addEventListener('click', (e) => {
-    if (e.target.tagName.toLowerCase() !== 'input') {
-      const cb = label.querySelector('input');
-      cb.checked = !cb.checked;
-      label.classList.toggle('selected', cb.checked);
-      e.preventDefault();
-    } else {
-      label.classList.toggle('selected', e.target.checked);
-    }
-  });
-  box.appendChild(label);
-}
-
-function addTodoFromInput() {
-  const v = (document.getElementById('todoNew').value || '').trim();
-  if (!v) return;
-  addTodoCard({text: v});
-  document.getElementById('todoNew').value = '';
-}
-
-function selectAllTodos() {
-  document.querySelectorAll('#todoCards .card input[type="checkbox"]').forEach(cb => {
-    cb.checked = true;
-    cb.closest('.card').classList.add('selected');
-  });
-}
-function clearAllTodos() {
-  document.querySelectorAll('#todoCards .card input[type="checkbox"]').forEach(cb => {
-    cb.checked = false;
-    cb.closest('.card').classList.remove('selected');
-  });
-}
-
-/** ---------- Note building & saving ---------- **/
-function buildEntry(text, forceTags=null) {
-  const date = fmtDate(), time = fmtTime();
-  let tags;
-  if (forceTags !== null) {
-    tags = forceTags; // exact tags or '' for none
-  } else {
-    const auto = [
-      `#${(selectedCategory || '').toLowerCase()}`,
-      selectedSubCategory ? `#${selectedSubCategory.toLowerCase()}` : ''
-    ].filter(Boolean).join(' ');
-    tags = auto;
+function computeHealthIndex(text){
+  const lines = normalizeText(text).split(/\n/);
+  const dayMap = new Map();
+  let currentDay = null;
+  for(const raw of lines){
+    const line = raw.trim(); if(!line) continue;
+    const mBracket = line.match(/\[(\d{4})-(\d{2})-(\d{2})\]/);
+    if(mBracket){ currentDay = `${mBracket[1]}-${mBracket[2]}-${mBracket[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); continue; }
+    const mHeadDash = line.match(/^\b(\d{4})-(\d{2})-(\d{2})\b/);
+    const mHeadSlash = line.match(DATE_SLASH_HEAD);
+    if(mHeadDash){ currentDay = `${mHeadDash[1]}-${mHeadDash[2]}-${mHeadDash[3]}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
+    else if(mHeadSlash){ currentDay = `${mHeadSlash[1]}-${pad2(+mHeadSlash[2])}-${pad2(+mHeadSlash[3])}`; if(!dayMap.has(currentDay)) dayMap.set(currentDay,{parts:new Set()}); }
+    if(!currentDay) continue;
+    const found = detectPartsInLine(line);
+    if(found.size){ const rec = dayMap.get(currentDay); for(const k of found) rec.parts.add(k); }
   }
-  const tagPart = tags ? ` ${tags}` : '';
-  return `[${date}\n${time} ｜ ${text}${tagPart}]`;
+  let dmax = null; for(const d of dayMap.keys()){ const dt=parseYMD(d); if(dt && (!dmax || dt>dmax)) dmax=dt; }
+  if(!dmax){ const dates = lines.map(l=>{ const m=l.match(DATE_RE); return m? new Date(+m[1],+m[2]-1,+m[3]) : null; }).filter(Boolean); if(dates.length) dmax = dates.sort((a,b)=>b-a)[0]; }
+  if(!dmax) return {score:0,count:0,window:[],dmax:null, detail:[], audit:''};
+  const window = []; for(let i=6;i>=0;i--) window.push(ymd(addDays(dmax,-i)));
+  let count=0; const detail=[];
+  for(const d of window){ const rec = dayMap.get(d); if(!rec){ detail.push({date:d,parts:[],times:0}); continue; }
+    const parts=[...rec.parts]; const n = parts.length; const times = n>=2?2:(n>=1?1:0); count += times; detail.push({date:d,parts,times}); }
+  const score = Math.min(100, count*10);
+  const audit = detail.map(r=>`- ${r.date}｜parts=[${r.parts.join(', ')}]｜當日計次=${r.times}`).join('\n');
+  return {score,count,window,dmax,detail,audit};
 }
 
-/**
- * Generalized shortcut sender
- * encodedText: 已經 encodeURIComponent() 過的文字
- * opts.shortcuts: 陣列，例如 ["SaveToSuccessDaily","SaveToInvestment"]
- */
-function sendToShortcuts(encodedText, opts) {
-  const names = (opts && Array.isArray(opts.shortcuts) && opts.shortcuts.length)
-    ? opts.shortcuts
-    : ["SaveToSuccessDaily"];
+const CATEGORY_DEFS = [
+  {key:'健康指數', kind:'health'},
+  {key:'學習財經', re:/(?=.*#pomodoro)(?=.*#finance)/i},
+  {key:'學習英文', re:/(?=.*#pomodoro)(?=.*#english)/i},
+  {key:'反思整理', re:/(?=.*#pomodoro)(?=.*#review)/i},
+  {key:'自我覺察', re:/(?=.*#mentalhealth)(?=.*#selfcontrol)/i},
+  {key:'關係經營', re:/(?=.*#relationship)(?=.*#happywifehappylife)/i}
+];
+function computeCategories(text, healthScore){ const lines = normalizeText(text).split(/\n/).map(s=>s.trim()).filter(Boolean); const counts = new Map(CATEGORY_DEFS.map(c=>[c.key,0])); for(const line of uniq(lines)){ for(const c of CATEGORY_DEFS){ if(c.kind==='health') continue; if(c.re.test(line)) counts.set(c.key, counts.get(c.key)+1); } } const result = CATEGORY_DEFS.map(c=>{ if(c.kind==='health') return {key:c.key, times:Math.round(healthScore/10), score:healthScore}; const times = counts.get(c.key) || 0; return {key:c.key, times, score:Math.min(100, times*10)}; }); return result; }
 
-  names.forEach((name, idx) => {
-    const url = `shortcuts://run-shortcut?name=${encodeURIComponent(name)}&input=text&text=${encodedText}`;
-    if (idx === 0) {
-      // 第一個先觸發
-      window.open(url);
-    } else {
-      // 之後的用延時觸發，避免互相打架
-      setTimeout(() => { window.location.href = url; }, 600 * idx);
-    }
-  });
-}
-
-/** Generic free-text save **/
-function saveToNotes() {
-  let txt = document.getElementById('content').value.trim();
-  if (!txt) { alert("Please enter something!"); return; }
-  txt = txt.replace(/#review\]/gi, '#review');
-
-  const encoded = encodeURIComponent(
-    selectedCategory === 'PainAnxietyDaily'
-      ? buildEntry(txt, tagOverrideByCategory.PainAnxietyDaily)
-      : buildEntry(txt)
-  );
-
-  if (selectedCategory === 'Finance') {
-    // Finance: SuccessDaily + Investment
-    sendToShortcuts(encoded, { shortcuts: ["SaveToSuccessDaily","SaveToInvestment"] });
-  } else {
-    sendToShortcuts(encoded);
+/*****************
+ * Sleep V2 — strict format parser
+ *****************/
+// Example line (anywhere in text):
+// [2025-09-28
+// 2:42pm ｜ sleep=9h | onBed=1:00am | energy=8/10 #health]
+function parseAmPmToMinutes(t){ const m = t.trim().match(/^(\d{1,2}):(\d{2})\s*(am|pm)$/i); if(!m) return null; let h = (+m[1]) % 12; if(/pm/i.test(m[3])) h += 12; const min = (+m[2]); return h*60 + min; }
+function mapBedMinute(m){ if(m==null) return null; if(m < 360) m += 1440; if(m < 1080 && m >= 360) return null; return m; }
+function computeSleepV2(text){
+  const s = normalizeText(text);
+  const recRe = /\[(\d{4})-(\d{2})-(\d{2})[\s\S]*?\n[^\n]*?sleep\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*h[^\n]*?onbed\s*=\s*([0-9]{1,2}:[0-9]{2}\s*(?:am|pm))[^\n]*?energy\s*=\s*([0-9]+(?:\.[0-9]+)?)(?:\s*\/\s*10)?[\s\S]*?\]/gi;
+  const rows = []; let m;
+  while((m = recRe.exec(s))){
+    const d = `${m[1]}-${m[2]}-${m[3]}`;
+    const sleepH = parseFloat(m[4]);
+    const bedMin0 = parseAmPmToMinutes(m[5]);
+    const bedMin = mapBedMinute(bedMin0);
+    const eng = parseFloat(m[6]);
+    const ok = sleepH>=2 && sleepH<=14 && !isNaN(eng) && eng>=0 && eng<=10 && bedMin!==null;
+    rows.push({date:d, sleep:sleepH, bed:bedMin, bedRaw:m[5].trim(), energy:eng, ok});
   }
+  if(!rows.length) return {summary:'（找不到符合格式的睡眠紀錄）', audit:'', hash:''};
+  const dmax = rows.map(r=>parseYMD(r.date)).filter(Boolean).sort((a,b)=>b-a)[0];
+  const windowSet = new Set(); for(let i=6;i>=0;i--) windowSet.add( ymd(addDays(dmax,-i)) );
+  const inWin = rows.filter(r=>windowSet.has(r.date) && r.ok);
+  if(!inWin.length){ return {summary:`（最近 7 天無有效紀錄。視窗：${[...windowSet].join('、')}）`, audit:'', hash:''}; }
+  const avg = arr => arr.reduce((a,b)=>a+b,0)/arr.length;
+  const avgSleep = avg(inWin.map(r=>r.sleep));
+  const avgBed = avg(inWin.map(r=>r.bed));
+  const avgEnergy = avg(inWin.map(r=>r.energy));
+  function bedFmt(m){ if(m==null) return '—'; if(m>=1440) m -= 1440; let h = Math.floor(m/60), mm = m%60; const ap = h>=12 ? 'pm' : 'am'; h = h%12; if(h===0) h=12; return `${h}:${String(mm).padStart(2,'0')}${ap}`; }
+  const summary = `🧾 睡眠一週平均（視窗：${[...windowSet].join('、')}）\n- 平均睡眠時間：${avgSleep.toFixed(2)} h\n- 平均 on-bed 時間：${bedFmt(avgBed)}\n- 平均精神 energy：${avgEnergy.toFixed(2)} / 10`;
+  const audit = inWin.map(r=>`- ${r.date}｜sleep=${r.sleep}h｜onBed=${r.bedRaw}｜energy=${r.energy}/10`).join('\n');
+  const hash = hashString(summary+'|'+audit);
+  return {summary, audit, hash};
 }
 
-/** Pomodoro quick log **/
-function logPomodoro() {
-  const note = buildEntry('25mins');
-  sendToShortcuts(encodeURIComponent(note));
-  goHome();
+/*****************
+ * Rendering
+ *****************/
+function renderFixedTable(rows){
+  const map = new Map(rows.map(r=>[r.key,r]));
+  function rowHTML(k){ const r = map.get(k) || {times:0,score:0}; return `<tr><td>${k}</td><td>${r.times} 次</td><td>${r.score} 分</td></tr>`; }
+  const html = `
+  <table>
+    <thead>
+      <tr><th>類別</th><th>出現次數</th><th>總分</th></tr>
+    </thead>
+    <tbody>
+      ${rowHTML('健康指數')}
+      ${rowHTML('學習財經')}
+      ${rowHTML('學習英文')}
+      ${rowHTML('反思整理')}
+      ${rowHTML('自我覺察')}
+      ${rowHTML('關係經營')}
+    </tbody>
+  </table>`;
+  return html;
 }
 
-/** Health structured save **/
-function saveHealth() {
-  const hours = parseInt((document.getElementById('sleepHours').value || '').trim(), 10);
-  const onBed = (document.getElementById('onBedTime').value || '').trim();
-  const energy = parseInt(document.getElementById('energy').value, 10);
-  const notes = (document.getElementById('healthNotes').value || '').trim();
+function doAll(){
+  const rawAll = $('#inputText').value||'';
+  const healthRaw = (typeof EXERCISE_TEXT==='string' && EXERCISE_TEXT.length) ? EXERCISE_TEXT : (document.querySelector('#inputTextPage2')?.value || '');
 
-  if (isNaN(hours) || hours < 4 || hours > 12) { alert('Please select sleeping hours between 4 and 12.'); return; }
-  if (!onBed) { alert('Please enter on-bed time.'); return; }
-  if (isNaN(energy) || energy < 1 || energy > 10) { alert('Energy must be 1–10.'); return; }
+  const health = computeHealthIndex(healthRaw);
+  const categories = computeCategories(rawAll, health.score);
+  const tableHTML = renderFixedTable(categories);
+  const sourceNote = healthRaw.trim()? '（資料來源：Page 2 運動輸入）' : '（⚠ 未填 Page 2，健康指數將為 0）';
+  $('#scoreTableWrap').innerHTML = tableHTML + `<div style="margin-top:8px" class="muted">健康指數：最近七天（${health.window.join('、')}）共 <b>${health.count}</b> 次運動 → ${health.score} 分。` + (health.dmax?`（Dmax=${ymd(health.dmax)}）`:'') + ` ${sourceNote}</div>`;
+  $('#exerciseAudit').textContent = health.audit || '（無資料可列）';
 
-  const onBedHuman = toHumanTime(onBed);
-  const pieces = [`sleep=${hours}h`,`onBed=${onBedHuman}`,`energy=${energy}/10`];
-  if (notes) pieces.push(`notes=${sanitizeInline(notes)}`);
+  // Sleep V2
+  const sleep = computeSleepV2(rawAll);
+  const sSum = document.getElementById('sleepV2Summary');
+  const sAud = document.getElementById('sleepV2Audit');
+  if(sSum && sAud){ sSum.textContent = sleep.summary; sAud.textContent = sleep.audit; }
 
-  const text = pieces.join(' | ');
-  selectedCategory = 'Health';
-  selectedSubCategory = '';
-  const note = buildEntry(text);
-
-  // Health: SuccessDaily + ADHD KSM66 and coffee
-  sendToShortcuts(encodeURIComponent(note), {
-    shortcuts: ["SaveToSuccessDaily","SaveToADHD KSM66 and coffee"]
-  });
+  const fp = makeFingerprint(rawAll + '\n\n__EXERCISE__\n' + healthRaw);
+  const cur = {L:fp.L,C:fp.C,H:fp.H, tableHash:hashString(tableHTML)};
+  let alertMsg = '';
+  if(lastFingerprint && lastFingerprint.L===cur.L && lastFingerprint.C===cur.C && lastFingerprint.H===cur.H){ if(lastFingerprint.tableHash!==cur.tableHash){ alertMsg = '⚠️ 偵測到結果不一致：請檢查是否有判斷邏輯或統計異動，或標記順序導致遺漏。'; } }
+  lastFingerprint = cur;
+  $('#alertBox').textContent = alertMsg;
 }
 
-/** NEW: quick log for "dip face into ice water" **/
-function logIceWater() {
-  selectedCategory = 'Health';
-  selectedSubCategory = '';
-  const text = 'Ice water wash face';
-  const note = buildEntry(text);
-  // 只寫入臉部相關記錄的 Shortcut
-  sendToShortcuts(encodeURIComponent(note), {
-    shortcuts: ["SaveToSuccessDaily","SaveToFacial photo record"]
-  });
-  goHome();
+/*****************
+ * Tests (sleep tests omitted here)
+ *****************/
+function runTests(){
+  const out=[]; const ok = (name, cond, left, right)=> out.push(`${cond? '✅':'❌'} ${name}${cond?'':`\n   got: ${left}\n   expected: ${right}`}`);
+  const t1 = `
+[2025-09-20]
+2025-09-20｜chest smith press
+2025-09-20｜swim 1km
+[2025-09-26]
+2025-09-26｜walk 7k steps`;
+  const h1 = computeHealthIndex(t1);
+  ok('T1 count==3', h1.count===3, h1.count, 3);
+  ok('T1 score==30', h1.score===30, h1.score, 30);
+  ok('T1 dmax==2025-09-26', (h1.dmax && ymd(h1.dmax)==='2025-09-26'), h1.dmax && ymd(h1.dmax), '2025-09-26');
+  document.getElementById('testOut').textContent = out.join('\n');
 }
 
-/** Tonight save */
-function saveTonight(state) {
-  const picked = Array.from(document.querySelectorAll('#todoCards .card'))
-    .filter(card => card.querySelector('input').checked)
-    .map(card => card.querySelector('.text').innerText.trim());
+/*****************
+ * Events
+ *****************/
+$('#next1').addEventListener('click',()=>{ if(!$('#inputText').value.trim()){ alert('請先貼上資料'); return; } setStep(2); });
+$('#back1').addEventListener('click',()=>setStep(1));
+$('#back2').addEventListener('click',()=>{ setStep(2); const p2=$('#inputTextPage2'); if(p2) p2.value=''; });
 
-  if (picked.length === 0) { alert('請至少選擇一項或新增項目'); return; }
+let EXERCISE_TEXT='';
+function appendFromPage2(){ const el = document.querySelector('#inputTextPage2'); if(!el) return; const v = el.value.trim(); EXERCISE_TEXT = v; }
+$('#confirmHasWorkout').addEventListener('click',()=>{ appendFromPage2(); setStep(3); doAll(); });
+$('#confirmNoWorkout').addEventListener('click',()=>{ appendFromPage2(); setStep(3); doAll(); });
 
-  selectedCategory = 'TonightToDoList';
-  selectedSubCategory = '';
-  const text = `Tonight: ${picked.join(', ')} | status=${state}`;
-  const note = buildEntry(text);
-  sendToShortcuts(encodeURIComponent(note));
-}
+$('#recalc').addEventListener('click',()=>doAll());
+$('#copyTable').addEventListener('click',()=>{ const node = $('#scoreTableWrap'); const txt = node.innerText.replace(/\n{2,}/g,'\n'); navigator.clipboard.writeText(txt).then(()=>{ alert('已複製評分表至剪貼簿'); }); });
+$('#copySleepV2').addEventListener('click',()=>{ const block = (document.getElementById('sleepV2Summary')?.innerText||'') + '\n\n' + (document.getElementById('sleepV2Audit')?.innerText||''); navigator.clipboard.writeText(block).then(()=>alert('已複製睡眠區塊')); });
+$('#clear').addEventListener('click',()=>{ $('#inputText').value=''; const p2=$('#inputTextPage2'); if(p2) p2.value=''; EXERCISE_TEXT=''; lastFingerprint=null; $('#scoreTableWrap').innerHTML=''; $('#exerciseAudit').textContent=''; $('#testOut').textContent=''; document.getElementById('sleepV2Summary').textContent=''; document.getElementById('sleepV2Audit').textContent=''; });
+$('#demo').addEventListener('click',()=>{
+  const demo = `
+[2025-09-20]
+2025-09-20｜#pomodoro #finance｜閱讀《漫步華爾街》30m
+2025-09-20｜chest smith press 90kg x 10
 
-/** helpers **/
-function toHumanTime(hhmm) {
-  const [hStr, mStr] = hhmm.split(':');
-  let h = parseInt(hStr, 10);
-  const ampm = h >= 12 ? 'pm' : 'am';
-  h = h % 12 || 12;
-  return `${h}:${mStr}${ampm}`;
-}
-function sanitizeInline(s) { return s.replace(/\n+/g, ' ').replace(/\]/g, ')'); }
-function escapeHTML(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+[2025-09-21]
+2025-09-21｜#pomodoro #english｜shadowing 20m
+2025-09-21｜swim 1km
 
-/** ---------- Dopamine Action (MentalHealth) ---------- **/
-function gotoDopamineAction() {
-  hidePages();
-  document.getElementById('pageDopa').classList.add('active');
-}
+[2025-09-22]
+[2025-09-22\n11:55pm ｜ sleep=6.2h | onBed=11:40pm | energy=6/10 #health]
 
-function chooseDopa(token, label){
-  // Step 1 -> Step 2
-  selectedDopaToken = token;        // e.g. [[Low Dopamine]]
-  selectedDopaLabel = label;        // UI-only (no [[ ]])
-  hidePages();
-  document.getElementById('dopaFormTitle').textContent = `Dopamine Action — ${selectedDopaLabel}`;
-  document.getElementById('dopaFormTime').textContent = `${fmtDate()} ${fmtTime()}`;
-  document.getElementById('dopaEvent').value = '';
-  document.getElementById('pageDopaForm').classList.add('active');
-}
+[2025-09-23]
+2025-09-23｜run 5k
+[2025-09-23\n12:05am ｜ sleep=6.0h | onBed=12:05am | energy=5/10 #health]
 
-function saveDopaEvent(){
-  const eventText = (document.getElementById('dopaEvent').value || '').trim();
-  if(!eventText){ alert('請輸入事件內容'); return; }
-  // 背景記錄 token，不在頁面顯示
-  selectedCategory = 'MentalHealth';
-  selectedSubCategory = 'DopamineAction';
-  const text = `${sanitizeInline(eventText)} ${selectedDopaToken}`;
-  const note = buildEntry(text);
-  sendToShortcuts(encodeURIComponent(note));
-  selectedDopaToken = '';
-  selectedDopaLabel = '';
-  goHome();
-}
+[2025-09-24]
+[2025-09-24\n12:10am ｜ sleep=7.2h | onBed=12:10am | energy=7/10 #health]
 
-/** ---------- NEW: Reward quick saves ---------- **/
-function saveReward(choice){
-  // Map choices to exact note text + (no extra tags)
-  let text = '';
-  let redeemUrl = null;
+[2025-09-25]
+2025-09-25｜walk 7k steps
 
-  if (choice === '抱石美女') {
-    text = '享受 #抱石美女 60**';
-    // NEW: redeem 60 score when using 抱石美女
-    redeemUrl = 'https://rvnkabev.github.io/ticket-draw/?redeem=60';
-  } else if (choice === '打機老婆（30mins)') {
-    text = '打機 #wife 5**';
-  } else {
-    alert('Unknown reward option'); return;
-  }
+[2025-09-26]
+[2025-09-26\n12:05am ｜ sleep=6h | onBed=12:05am | energy=5/10 #health]
+`;
+  $('#inputText').value = demo.trim();
+});
 
-  selectedCategory = 'Reward';
-  selectedSubCategory = '';
-  const note = buildEntry(text, ''); // force NO auto tags; exact requested text only
-  const encoded = encodeURIComponent(note);
+const runBtn = document.querySelector('#runTests');
+if(runBtn) runBtn.addEventListener('click', runTests);
 
-  // send to SuccessDaily as before
-  sendToShortcuts(encoded);
-
-  // If 抱石美女, after shortcuts fire, jump to redeem page
-  if (redeemUrl) {
-    setTimeout(() => {
-      window.location.href = redeemUrl;
-    }, 800); // small delay to avoid fighting with Shortcuts URL
-  }
-
-  goHome();
-}
+// default to Page 1
+setStep(1);
 </script>
 </body>
 </html>
